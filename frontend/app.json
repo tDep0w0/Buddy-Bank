@@ -1,6 +1,3 @@
-// Config chính của Expo: tên app, icon, splash screen, 
-// orientation, environment, version.
-
 {
   "expo": {
     "name": "frontend",
