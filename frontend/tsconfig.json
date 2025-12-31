@@ -1,3 +1,5 @@
+// Config TypeScript: target, module, strict mode,… nếu bạn dùng TS.
+
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {

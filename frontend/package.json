@@ -1,3 +1,6 @@
+// Quản lý dependency, script, version của project. 
+// Đây là “hệ thống điều khiển” npm/yarn.
+
 {
   "name": "frontend",
   "main": "expo-router/entry",
