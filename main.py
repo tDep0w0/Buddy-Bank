@@ -18,7 +18,9 @@ dataBase = supabase.create_client(
     
     )  
 
-def get_signed_image_url(path: str, bucket: str = "Receipts", expires_in: int = 60):
+def get_signed_image_url(path: str,
+                          bucket: str = "receipts", 
+                          expires_in: int = 60):
     res = dataBase.storage.from_(bucket).create_signed_url(
         path,
         expires_in
@@ -84,4 +86,10 @@ def analyze_receipt(image_path: str) -> dict:
         return json.loads(raw_text)
     except json.JSONDecodeError:
         raise ValueError(f"Model returned invalid JSON:\n{raw_text}")
+
+
+result = analyze_receipt("receipt01.jpg")
+print(result)
+
+
 
