@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException
 import json
+import re
 import requests
 
 
@@ -30,6 +31,20 @@ def get_signed_image_url(path: str,
 #-------------ANALYZING THE RECEIPT--------------#
 
 def analyze_receipt(image_path: str) -> dict:
+
+    def safe_json_parse(text: str) -> dict:
+        array_match = re.search(r"\[[\s\S]*\]", text)
+        if array_match:
+            return json.loads(array_match.group(0))
+
+        # Fallback: single object
+        obj_match = re.search(r"\{[\s\S]*\}", text)
+        if obj_match:
+            return json.loads(obj_match.group(0))
+
+        raise ValueError("No valid JSON found")
+        
+
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
         raise RuntimeError("Missing OPENROUTER_API_KEY")
@@ -49,9 +64,11 @@ def analyze_receipt(image_path: str) -> dict:
                     {
                         "type": "text",
                         "text": (
-                            "Analyze the receipt and return a JSON dictionary where "
-                            "keys are item names and values are prices. "
-                            "Return ONLY valid JSON."
+                            "Analyze the receipt and return ONLY valid JSON in the following format:\n"
+                            "[\n"
+                            "  { \"item\": \"ITEM_NAME\", \"price\": NUMBER }\n"
+                            "]\n"
+                            "One object per receipt item. No extra text."
                         )
                     },
                     {
@@ -83,13 +100,14 @@ def analyze_receipt(image_path: str) -> dict:
     raw_text = data["choices"][0]["message"]["content"]
 
     try:
-        return json.loads(raw_text)
+        return safe_json_parse(raw_text)
     except json.JSONDecodeError:
         raise ValueError(f"Model returned invalid JSON:\n{raw_text}")
 
 
 result = analyze_receipt("receipt01.jpg")
 print(result)
+
 
 
 
