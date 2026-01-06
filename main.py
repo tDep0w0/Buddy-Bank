@@ -8,6 +8,7 @@ import requests
 
 
 load_dotenv()
+app = FastAPI()
 
 
 
@@ -105,8 +106,10 @@ def analyze_receipt(image_path: str) -> dict:
         raise ValueError(f"Model returned invalid JSON:\n{raw_text}")
 
 
-result = analyze_receipt("receipt01.jpg")
-print(result)
+@app.get("/receipt")
+def get_receipt():
+    return analyze_receipt("receipt01.jpg")
+
 
 
 
