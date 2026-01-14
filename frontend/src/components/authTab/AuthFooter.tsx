@@ -22,14 +22,16 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 16,
+    marginTop: 28,
   },
   text: {
     color: '#ccc',
+    fontSize: 15,
   },
   link: {
     color: '#00C853',
     fontWeight: 'bold',
+    fontSize: 15,
   },
 });
 

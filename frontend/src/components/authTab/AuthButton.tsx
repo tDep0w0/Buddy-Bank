@@ -1,5 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View} from 'react-native';
+import ArrowRight from '../../../assets/images/arrow_right.svg';
 
 interface AuthButtonProps {
   title: string;
@@ -9,7 +10,10 @@ interface AuthButtonProps {
 const AuthButton: React.FC<AuthButtonProps> = ({ title, onPress }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+      <View style={styles.content}>
+        <Text style={styles.text}>{title}</Text>
+        <ArrowRight width={20} height={20} fill="black" style={{ marginLeft: 8 }} />
+      </View> 
     </TouchableOpacity>
   );
 };
@@ -17,15 +21,18 @@ const AuthButton: React.FC<AuthButtonProps> = ({ title, onPress }) => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#00C853',
-    paddingVertical: 16,
+    paddingVertical: 18,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 16,
   },
   text: {
-    color: '#fff',
+    color: "black",
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
