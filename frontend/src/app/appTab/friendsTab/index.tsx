@@ -6,10 +6,6 @@ export default function FriendTab() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome to Friend Tab!</Text>
-      <Button
-        title="Log out"
-        onPress={() => router.replace("/authTab/login")}
-      />
     </View>
   );
 }

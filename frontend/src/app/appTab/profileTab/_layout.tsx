@@ -6,6 +6,8 @@ export default function Layout() {
     <Stack
       screenOptions={{
         headerShown: true,
+        title:"Profile",
+        headerTitleAlign: "center",
         headerStyle: {
             backgroundColor: Colors.background,
             borderBottomColor: Colors.textGray,

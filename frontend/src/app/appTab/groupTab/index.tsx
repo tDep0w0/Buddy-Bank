@@ -7,10 +7,6 @@ export default function GroupTab() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome to Group Tab!</Text>
-      <Button
-        title="Log out"
-        onPress={() => router.replace("/authTab/login")}
-      />
     </View>
   );
 }

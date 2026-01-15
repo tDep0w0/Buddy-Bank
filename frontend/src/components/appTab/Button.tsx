@@ -1,25 +1,29 @@
 import React from "react";
 import {TouchableOpacity, Text, StyleSheet} from "react-native";
+import { Colors } from "../../constants/colors";
 
 type ButtonType = "logout" | "change";
 
 interface Props {
     type: ButtonType;
     onPress: () => void;
+    symbol: React.ReactNode
 }
 
-const ActionButton: React.FC<Props> = ({type, onPress}) => {
+const ActionButton: React.FC<Props> = ({type, onPress, symbol}) => {
     const isLogout = type === "logout";
-    const label = isLogout ? "Logout" : "Change Password";
+    const label = isLogout ? "Log Out" : "Change Password";
 
     return (
         <TouchableOpacity 
             style={[
                 styles.button,
                 isLogout ? styles.logoutButton : styles.changeButton,
+                { flexDirection: 'row' }, {justifyContent: 'center'}, {gap: 6}
             ]} 
             onPress={onPress}
         >
+            {symbol}
             <Text style={[ styles.text, isLogout ? styles.logoutText : styles.changeText, ]} >
         {label}
       </Text>
@@ -30,11 +34,12 @@ const ActionButton: React.FC<Props> = ({type, onPress}) => {
 const styles = StyleSheet.create({
     button: {
         backgroundColor: "#007AFF",
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 8,
+        paddingHorizontal: 16,
+        paddingVertical: 16,
+        borderRadius: 12,
         alignItems: "center",
         marginVertical: 8,
+        width: '90%'
     },
     text: {
         color: '#fff',
@@ -42,10 +47,12 @@ const styles = StyleSheet.create({
         fontWeight: "600",
     },
     logoutButton: { 
-        backgroundColor: "#FF3B30", 
+        backgroundColor: Colors.background,
+        borderWidth: 1,
+        borderColor: Colors.red, 
     },
     logoutText: { 
-        color: "#fff", 
+        color: Colors.red, 
     },
     changeButton: { 
         backgroundColor: "#007AFF", 
