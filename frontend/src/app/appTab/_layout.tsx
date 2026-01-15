@@ -26,7 +26,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="friendsTab/index"
         options={{
-          title: "Friends",
+          title: "My Friends",
           tabBarIcon: ({ color, size }) => (
             <Friends width={size} height={size} fill={color} />
           )
