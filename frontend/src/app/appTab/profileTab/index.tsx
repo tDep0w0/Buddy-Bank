@@ -9,6 +9,7 @@ import Person from '../../../../assets/images/person.svg';
 import UserNameIcon from '../../../../assets/images/@mail.svg';
 import MailIcon from '../../../../assets/images/mail.svg';
 import LogOutIcon from '../../../../assets/images/logout.svg';
+import AvatarPicker from "@/components/appTab/AvatarPicker";
 
 export default function ProfileTab() {
   const navigation = useNavigation();
@@ -23,7 +24,12 @@ export default function ProfileTab() {
 
   return (
     <View style={styles.container}>
+
+
       <View style={{ width: '100%', alignItems: 'center', marginBottom: 40 }}>
+        
+        <AvatarPicker avatarUrl={undefined} onChangeAvatar={() => {}} />
+          
         <ProfileInfoTF
           title="Name"
           value="Alex Johnson"
@@ -64,12 +70,10 @@ export default function ProfileTab() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.background,
-    width: '100%',
-    paddingHorizontal: 20,
+    backgroundColor: Colors.background
   },
 });
