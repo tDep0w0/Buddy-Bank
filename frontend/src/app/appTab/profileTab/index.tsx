@@ -1,35 +1,39 @@
 import { router, useNavigation } from "expo-router";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Alert } from "react-native";
 import { Colors } from "../../../constants/colors";
 import { useLayoutEffect } from "react";
 import ActionButton from "@/components/appTab/Button";
 import ProfileInfoTF from "@/components/appTab/ProfileInfo";
-import React from "react";
+import React, { useState } from "react";
 import Person from '../../../../assets/images/person.svg';
 import UserNameIcon from '../../../../assets/images/@mail.svg';
 import MailIcon from '../../../../assets/images/mail.svg';
 import LogOutIcon from '../../../../assets/images/logout.svg';
 import AvatarPicker from "@/components/appTab/AvatarPicker";
+import CustomizeModal from "@/components/appTab/Modal";
 
 export default function ProfileTab() {
+  const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity onPress={() => router.push("/appTab/profileTab/editProfile")}>
-          <Text style={{ color: Colors.primary, marginRight: 14, fontSize:18, fontWeight:'600'}}>Edit</Text>
+          <Text style={{ color: Colors.primary, marginRight: 14, fontSize: 18, fontWeight: '600' }}>Edit</Text>
         </TouchableOpacity>),
+      headerBackTitleVisible: false,
+      headerTintColor: Colors.primary,
     });
   }, [navigation]);
 
   return (
     <View style={styles.container}>
 
+      <View style={{ width: '100%', alignItems: 'center', marginBottom: 20 }}>
 
-      <View style={{ width: '100%', alignItems: 'center', marginBottom: 40 }}>
-        
-        <AvatarPicker avatarUrl={undefined} onChangeAvatar={() => {}} />
-          
+        <AvatarPicker avatarUrl={undefined} onChangeAvatar={() => { }} />
+
         <ProfileInfoTF
           title="Name"
           value="Alex Johnson"
@@ -46,33 +50,30 @@ export default function ProfileTab() {
           symbol={<MailIcon width={20} height={20} fill="white" />}
         />
       </View>
-      <ActionButton 
+      <ActionButton
         symbol={<LogOutIcon width={20} height={20} fill={Colors.red} />}
         type="logout"
-        onPress={() => {
-          Alert.alert(
-            "Confirm Logout",
-            "Are you sure you want to log out?",
-            [
-              { text: "Cancel", style: "cancel" },
-              { 
-                text: "Logout", 
-                style: "destructive",
-                onPress: () => router.replace("/authTab/login")
-              }
-            ]
-          );
-        }}
+        onPress={() => { setModalVisible(true) }}
 
       />
+
+      <CustomizeModal
+        visible={modalVisible}
+        title="Log out of your account?"
+        text1="Log out"
+        text2="Cancel"
+        action1={() => router.replace("../../authTab/login")}
+        action2={() => setModalVisible(false)}
+      />
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-container: {
+  container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     backgroundColor: Colors.background
   },

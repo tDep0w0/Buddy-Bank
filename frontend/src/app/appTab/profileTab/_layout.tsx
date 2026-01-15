@@ -9,9 +9,7 @@ export default function Layout() {
         title:"Profile",
         headerTitleAlign: "center",
         headerStyle: {
-            backgroundColor: Colors.background,
-            borderBottomColor: Colors.textGray,
-            borderBottomWidth: 0.5,
+            backgroundColor: Colors.background,     
         },
         headerTitleStyle: {
           color: "white",
@@ -20,5 +18,7 @@ export default function Layout() {
         },
       }}
     />
+
+    
   );
 }

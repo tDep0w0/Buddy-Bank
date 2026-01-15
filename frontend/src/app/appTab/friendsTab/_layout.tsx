@@ -10,8 +10,6 @@ export default function Layout() {
         headerTitleAlign: "center",
         headerStyle: {
             backgroundColor: Colors.background,
-            borderBottomColor: Colors.textGray,
-            borderBottomWidth: 0.5,
         },
         headerTitleStyle: {
           color: "white",

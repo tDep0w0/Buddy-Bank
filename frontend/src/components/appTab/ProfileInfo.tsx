@@ -15,7 +15,7 @@ const ProfileInfoTF: React.FC<ProfileInfoProps> = ({ title, value, symbol, ...re
       <Text style={styles.key}>{title}</Text>
       <View style={styles.inputContainer}>
         {symbol}
-        <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>{value}</Text>
+        <Text style={{ color: "white", fontSize: 16, fontWeight: "500" }}>{value}</Text>
       </View>
     </View>
   );
@@ -24,7 +24,7 @@ const ProfileInfoTF: React.FC<ProfileInfoProps> = ({ title, value, symbol, ...re
 const styles = StyleSheet.create({
   key: {
     color: Colors.textGray,
-    fontWeight: '500',
+    fontWeight: '400',
     marginBottom: 8,
     paddingLeft: 8,
     fontSize: 16,

@@ -38,7 +38,7 @@ export default function AvatarPicker({ avatarUrl, onChangeAvatar }: AvatarPicker
     return (
         <View style={styles.container}>
             <Image
-                source={avatarUrl ? { uri: avatarUrl } : require("../../../assets/images/Generic_Profile_Avatar/cat.svg")}
+                source={avatarUrl ? (<Image source={{ uri: avatarUrl }} style={styles.avatar} />) : require("../../../assets/images/default_ava.jpg")}
                 style={styles.avatar}
             />
 
@@ -53,9 +53,13 @@ export default function AvatarPicker({ avatarUrl, onChangeAvatar }: AvatarPicker
                     <Text style={styles.modalText}>Choose from gallery</Text>
                     </TouchableOpacity>
 
+                    <View style={styles.divider} />
+
                     <TouchableOpacity style={styles.modalItem} onPress={takePhoto}>
                     <Text style={styles.modalText}>Take a photo</Text>
                     </TouchableOpacity>
+
+                    <View style={styles.divider} />
 
                     <TouchableOpacity style={styles.modalItem} onPress={() => setModalVisible(false)}>
                     <Text style={[styles.modalText, { color: Colors.red }]}>Cancel</Text>
@@ -72,14 +76,16 @@ const styles = StyleSheet.create({
     container: { 
         position: "relative", 
         width: 120, 
-        height: 120, 
+        height: 120,
+        marginBottom: 20, 
+        marginTop: 35,
     }, 
     avatar: { 
         width: "100%", 
         height: "100%", 
         borderRadius: 60, 
         borderWidth: 2, 
-        borderColor: Colors.textGray, 
+        borderColor: Colors.primary, 
     }, 
     cameraButton: { 
         position: "absolute", 
@@ -103,8 +109,8 @@ const styles = StyleSheet.create({
     modalBox: { 
         width: "75%", 
         backgroundColor: Colors.surface, 
-        borderRadius: 12, 
-        paddingVertical: 20, 
+        borderRadius: 16, 
+        paddingVertical: 12, 
     }, 
     modalItem: { 
         paddingVertical: 14, 
@@ -112,7 +118,12 @@ const styles = StyleSheet.create({
     },
     modalText: { 
         color: "white", 
-        fontSize: 16, 
-        fontWeight: "500", 
+        fontSize: 18, 
+        fontWeight: "400", 
     }, 
+    divider: {
+        height: 1,
+        backgroundColor: "rgba(255,255,255,0.15)",
+        marginVertical: 2,
+    },
 });
