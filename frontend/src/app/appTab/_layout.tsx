@@ -8,6 +8,7 @@ export default function AppLayout() {
   return (
     <Tabs
       screenOptions={{
+        headerShown: false;
         tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: Colors.textGray,
         tabBarLabelStyle: { fontSize: 12 },
@@ -26,7 +27,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="friendsTab"
         options={{
-          title: "My Friends",
+          title: "Friends",
           tabBarIcon: ({ color, size }) => (
             <Friends width={size} height={size} fill={color} />
           )
