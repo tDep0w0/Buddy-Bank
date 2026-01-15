@@ -32,7 +32,7 @@ export default function AppLayout() {
           )
         }} />
       <Tabs.Screen
-        name="profileTab/index"
+        name="profileTab"
         options={{
           title: "Profile",
           tabBarIcon: ({ color, size }) => (
