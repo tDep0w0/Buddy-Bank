@@ -9,7 +9,7 @@ export default function ProfileTab() {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => router.push("/profileTab/editProfile")}>
+        <TouchableOpacity onPress={() => router.push("/profileTab/screen/editProfile")}>
           <Text style={{ color: Colors.primary, marginRight: 14, fontSize:18, fontWeight:'600'}}>Edit</Text>
         </TouchableOpacity>),
     });
