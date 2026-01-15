@@ -13,7 +13,7 @@ export default function AppLayout() {
         tabBarLabelStyle: { fontSize: 12 },
         tabBarStyle: { backgroundColor: Colors.background, borderTopColor: Colors.textGray, borderTopWidth: 0.5 },
         headerStyle: { backgroundColor: Colors.background, borderBottomColor: Colors.textGray, borderBottomWidth: 0.5 },
-        headerTitleStyle: { color: 'white' },
+        headerTitleStyle: { color: 'white' , fontSize: 18, fontWeight: '600' },
       }}>
       <Tabs.Screen
         name="groupTab/index"

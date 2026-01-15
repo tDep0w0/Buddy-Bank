@@ -1,7 +1,6 @@
 import { router } from "expo-router";
-import { View, Text, Button } from "react-native";
-import {Colors} from "../../../constants/colors";
-import { StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
+import { Colors } from "../../../constants/colors";
 
 export default function FriendTab() {
   return (
