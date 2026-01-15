@@ -16,7 +16,7 @@ export default function AppLayout() {
         headerTitleStyle: { color: 'white' , fontSize: 18, fontWeight: '600' },
       }}>
       <Tabs.Screen
-        name="groupTab/index"
+        name="groupTab"
         options={{
           title: "Groups",
           tabBarIcon: ({ color, size}) => (
@@ -24,7 +24,7 @@ export default function AppLayout() {
           )
         }} />
       <Tabs.Screen
-        name="friendsTab/index"
+        name="friendsTab"
         options={{
           title: "My Friends",
           tabBarIcon: ({ color, size }) => (
