@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, Image, View } from "react-native";
 import { router } from "expo-router";
 import { Colors } from "../../constants/colors";
 
@@ -10,12 +10,14 @@ import GoogleAuthButton from "../../components/authTab/GoogleAuthButton";
 import AuthFooter from "../../components/authTab/AuthFooter";
 
 export default function SignupScreen() {
+  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSignUp = () => {
-    router.replace("/appTab/friendsTab");
+    router.replace("/appTab/groupTab");
   };
 
   const handleLogIn = () => {
@@ -28,49 +30,76 @@ export default function SignupScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <AuthHeader
-        title="Create Account"
-        subtitle="Join your friends and start splitting expenses easily"
-      />
+    <ScrollView style={{ flex: 1, backgroundColor: Colors.background }}>
+      <View style={styles.container}>
+        <Image
+          source={require("../../../assets/images/icon.jpg")}
+          style={{ width: 85, height: 85, alignSelf: "center", marginBottom: 15, borderRadius: 20 }}
+        />
 
-      <AuthInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <AuthInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <AuthInput 
-        placeholder="Confirm Password" 
-        value={confirmPassword} 
-        onChangeText={setConfirmPassword} 
-        secureTextEntry 
-      />
+        <AuthHeader
+          title="Create Account"
+          subtitle="Start splitting expenses easily today"
+        />
 
-      <AuthButton title="Sign Up" onPress={handleSignUp} />
+        <View style={{ marginBottom: 15 }}>
+          <AuthInput
+            name="Name"
+            placeholder="Enter your full name"
+            value={name}
+            onChangeText={setName}
+            keyboardType="default"
+          />
+          <AuthInput
+            name="Username"
+            placeholder="Choose a username"
+            value={userName}
+            onChangeText={setUserName}
+            keyboardType="default"
+          />
+          <AuthInput
+            name="Email"
+            placeholder="name@example.com"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
+          <AuthInput
+            name="Password"
+            placeholder="Create a password here"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          <AuthInput
+            name="Confirm Password"
+            placeholder="Confirm your password here"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+          />
+        </View>
 
-      <GoogleAuthButton onPress={handleGoogleSignUp} />
+        <AuthButton title="Sign Up" onPress={handleSignUp} />
 
-      <AuthFooter
-        question="Already have an account?"
-        actionText="Log In"
-        onActionPress={handleLogIn}
-      />
-    </View>
+        <GoogleAuthButton onPress={handleGoogleSignUp} />
+
+        <AuthFooter
+          question="Already have an account?"
+          actionText="Log In"
+          onActionPress={handleLogIn}
+        />
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: Colors.background,
-    justifyContent: "center",
+    paddingTop: 80,
+    paddingBottom: 80,
     paddingHorizontal: 24,
   },
 });

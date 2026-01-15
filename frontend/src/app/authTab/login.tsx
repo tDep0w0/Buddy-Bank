@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { router } from "expo-router";
 import { Colors } from "../../constants/colors";
 
@@ -15,7 +15,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    router.replace("/appTab/friendsTab");
+    router.replace("/appTab/groupTab");
   };
 
   const handleSignUp = () => {
@@ -29,23 +29,32 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={require("../../../assets/images/icon.jpg")}
+        style={{ width: 100, height: 100, alignSelf: "center", marginBottom: 15, borderRadius: 20 }}
+      />
+
       <AuthHeader
         title="Welcome Back"
         subtitle="Sign in to track your group expenses"
       />
 
-      <AuthInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <AuthInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+      <View style={{ marginBottom: 15 }}>
+        <AuthInput
+          name="Email"
+          placeholder="name@example.com"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+        <AuthInput
+          name="Password"
+          placeholder="Enter your password here"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+      </View>
 
       <AuthButton title="Login" onPress={handleLogin} />
 

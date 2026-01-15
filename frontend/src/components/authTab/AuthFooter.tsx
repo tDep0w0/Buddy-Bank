@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Colors } from '../../constants/colors';
 
 interface AuthFooterProps {
   question: string;
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   link: {
-    color: '#00C853',
+    color: Colors.primary,
     fontWeight: 'bold',
     fontSize: 15,
   },

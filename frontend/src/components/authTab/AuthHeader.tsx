@@ -17,18 +17,18 @@ const AuthHeader: React.FC<AuthHeaderProps> = ({ title, subtitle }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 32,
+    marginBottom: 25,
     alignItems: 'center',
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#fff',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#ccc',
-    marginTop: 8,
+    marginTop: 10,
     textAlign: 'center',
   },
 });

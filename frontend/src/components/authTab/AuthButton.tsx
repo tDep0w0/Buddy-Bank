@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View} from 'react-native';
 import ArrowRight from '../../../assets/images/arrow_right.svg';
+import { Colors } from '../../constants/colors';
 
 interface AuthButtonProps {
   title: string;
@@ -20,10 +21,12 @@ const AuthButton: React.FC<AuthButtonProps> = ({ title, onPress }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#00C853',
+    backgroundColor: Colors.primary,
     paddingVertical: 18,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
+    borderColor: Colors.primary,
+    borderWidth: 1,
   },
   text: {
     color: "black",
