@@ -5,25 +5,28 @@ import { Colors } from "../../constants/colors";
 type ButtonType = "Add" | "Sent" | "Friends";
 
 interface Props {
-  type: ButtonType;
+  type?: ButtonType;
   onPress: () => void;
   symbol?: React.ReactNode;
+  title?: string;
+  disabled?: boolean;
 }
 
-const ActionButton: React.FC<Props> = ({ type, onPress, symbol }) => {
+const ActionButton: React.FC<Props> = ({ type, onPress, symbol, title, disabled }) => {
   const isAdd = type === "Add";
   const isSent = type === "Sent";
 
-  const label = isAdd ? "Add" : isSent ? "Sent" : "Friends";
+  const label = title || (isAdd ? "Add" : isSent ? "Sent" : "Friends");
+  const isDisabled = disabled !== undefined ? disabled : !isAdd;
 
   return (
     <TouchableOpacity
-      disabled={!isAdd}
+      disabled={isDisabled}
       onPress={onPress}
       style={[
         styles.button,
         isAdd ? styles.primaryButton : styles.secondaryButton,
-        !isAdd && styles.disabled,
+        isDisabled && styles.disabled,
       ]}
     >
       {symbol && <View style={{ marginRight: 6 }}>{symbol}</View>}
@@ -48,7 +51,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 12,
-    width: "20%",
     marginVertical: 8,
   },
 
