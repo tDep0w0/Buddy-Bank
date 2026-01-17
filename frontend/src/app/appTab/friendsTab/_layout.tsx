@@ -21,14 +21,14 @@ export default function Layout() {
           fontWeight: "600",
         },
         headerRight: () => (
-          <View style={{ flexDirection: "row", gap: 16 }}>
+          <View style={{ flexDirection: "row", gap: 16, marginRight: 4, }}>
             <Pressable
               onPress={() => router.push("/appTab/friendsTab/requests")}
             >
               <Ionicons
                 name="notifications-outline"
                 size={22}
-                color="white"
+                color={Colors.primary}
               />
             </Pressable>
 
@@ -38,7 +38,7 @@ export default function Layout() {
               <Ionicons
                 name="person-add-outline"
                 size={22}
-                color="white"
+                color={Colors.primary}
               />
             </Pressable>
           </View>

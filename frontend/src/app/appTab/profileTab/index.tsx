@@ -20,7 +20,7 @@ export default function ProfileTab() {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity onPress={() => router.push("/appTab/profileTab/editProfile")}>
-          <Text style={{ color: Colors.primary, marginRight: 14, fontSize: 18, fontWeight: '600' }}>Edit</Text>
+          <Text style={{ color: Colors.primary, marginRight: 4, fontSize: 18, fontWeight: '600' }}>Edit</Text>
         </TouchableOpacity>),
       headerBackTitleVisible: false,
       headerTintColor: Colors.primary,

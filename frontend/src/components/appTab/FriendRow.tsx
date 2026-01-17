@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import { Colors } from "../../../constants/colors";
+import { Colors } from "../../constants/colors";
 
 export default function FriendRow({ friend }: any) {
   let statusText = "";
@@ -7,10 +7,10 @@ export default function FriendRow({ friend }: any) {
 
   if (friend.status === "Owes you") {
     statusText = `Owes you $${friend.amount}`;
-    statusColor = "#4ade80";
+    statusColor = Colors.primary;
   } else if (friend.status === "You owe") {
     statusText = `You owe $${friend.amount}`;
-    statusColor = "#f87171";
+    statusColor = Colors.red;
   }
 
   return (
@@ -35,19 +35,20 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#16231c",
-    padding: 12,
+    backgroundColor: Colors.surface,
+    padding: 14,
     borderRadius: 14,
     marginBottom: 12,
   },
   avatar: {
-    width: 42,
-    height: 42,
+    width: 44,
+    height: 44,
     borderRadius: 21,
-    backgroundColor: "#22c55e",
+    backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
+    marginLeft: 4,
   },
   avatarText: {
     color: "white",
@@ -57,5 +58,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
+    paddingBottom: 2,
   },
 });

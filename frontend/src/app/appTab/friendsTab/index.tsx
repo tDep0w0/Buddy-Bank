@@ -17,7 +17,7 @@ export default function FriendsScreen() {
     <View style={styles.container}>
       <TextInput
         placeholder="Search by name or email"
-        placeholderTextColor="#999"
+        placeholderTextColor={Colors.textGray}
         style={styles.search}
       />
 
@@ -38,10 +38,14 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   search: {
-    backgroundColor: "#1e2b24",
+    backgroundColor: Colors.surface,
     borderRadius: 12,
-    padding: 12,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+    fontSize: 16,
+    fontWeight: "500",
     color: "white",
-    marginBottom: 16,
+    marginBottom: 18,
+    marginTop: 2,
   },
 });
