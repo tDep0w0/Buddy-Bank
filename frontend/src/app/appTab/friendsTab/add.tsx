@@ -26,14 +26,18 @@ export default function AddFriendScreen() {
             <Text style={styles.name}>{item.name}</Text>
 
             <CustomButton
-              title={item.status === "add"
-                ? "Add"
-                : item.status === "sent"
+              type={
+                item.status === "add"
+                  ? "Add"
+                  : item.status === "sent"
                   ? "Sent"
-                  : "Friends"}
-              disabled={item.status !== "add"} onPress={() => {
-                console.log("Pressed");
-              }} />
+                  : "Friends"
+              }
+              onPress={() => {
+                /* Handle button press */
+                console.log("Pressed ", item.name);
+              }}
+              />
           </View>
         )}
       />

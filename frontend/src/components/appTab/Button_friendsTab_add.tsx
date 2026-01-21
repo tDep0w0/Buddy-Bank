@@ -2,10 +2,10 @@ import React from "react";
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 import { Colors } from "../../constants/colors";
 
-type ButtonType = "Add" | "Sent" | "Friends";
+type ButtonType = "Add" | "Sent" | "Friends" | "Unsend";
 
 interface Props {
-  type?: ButtonType;
+  type: ButtonType;
   onPress: () => void;
   symbol?: React.ReactNode;
   title?: string;
@@ -13,35 +13,59 @@ interface Props {
 }
 
 const ActionButton: React.FC<Props> = ({ type, onPress, symbol, title, disabled }) => {
-  const isAdd = type === "Add";
-  const isSent = type === "Sent";
-
-  const label = title || (isAdd ? "Add" : isSent ? "Sent" : "Friends");
-  const isDisabled = disabled !== undefined ? disabled : !isAdd;
+  const config = buttonConfig[type];
 
   return (
     <TouchableOpacity
-      disabled={isDisabled}
+      disabled={disabled}
       onPress={onPress}
       style={[
         styles.button,
-        isAdd ? styles.primaryButton : styles.secondaryButton,
-        isDisabled && styles.disabled,
+        config.buttonStyle,
+        disabled && styles.disabled,
       ]}
     >
       {symbol && <View style={{ marginRight: 6 }}>{symbol}</View>}
 
-      <Text
-        style={[
-          styles.text,
-          isAdd ? styles.primaryText : styles.secondaryText,
-        ]}
-      >
-        {label}
+      <Text style={[styles.text, config.textStyle]}>
+        {title || config.label}
       </Text>
     </TouchableOpacity>
   );
 };
+
+/* ---------------- CONFIG ---------------- */
+
+const buttonConfig = {
+  Add: {
+    label: "Add",
+    buttonStyle: { backgroundColor: "#22c55e" },
+    textStyle: { color: "#fff" },
+  },
+  Unsend: {
+    label: "Unsend",
+    buttonStyle: { backgroundColor: "#dc2626" },
+    textStyle: { color: "#fff" },
+  },
+  Sent: {
+    label: "Sent",
+    buttonStyle: {
+      backgroundColor: Colors.background,
+      borderWidth: 1,
+      borderColor: "#52525b",
+    },
+    textStyle: { color: "#a1a1aa" },
+  },
+  Friends: {
+    label: "Friends",
+    buttonStyle: {
+      backgroundColor: "#1e3a8a",
+    },
+    textStyle: { color: "#fff" },
+  },
+};
+
+/* ---------------- STYLE ---------------- */
 
 const styles = StyleSheet.create({
   button: {
@@ -59,26 +83,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  primaryButton: {
-    backgroundColor: "#22c55e",
-  },
-
-  primaryText: {
-    color: "#fff",
-  },
-
-  secondaryButton: {
-    backgroundColor: Colors.background,
-    borderWidth: 1,
-    borderColor: "#3f3f46",
-  },
-
-  secondaryText: {
-    color: "#9ca3af",
-  },
-
   disabled: {
-    opacity: 0.6,
+    opacity: 0.5,
   },
 });
 
