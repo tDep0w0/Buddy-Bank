@@ -25,3 +25,27 @@ export async function getFriends(userId: string) {
 
   return data.map((row) => (row.user1.id !== userId ? row.user1 : row.user2));
 }
+
+export async function getFriendRequests(userId: string) {
+  const { data, error } = await supabase
+    .from("friend_request")
+    .select(
+      `
+        sender_id,
+        is_pending,
+        user!friend_request_sender_id_fkey (
+          username,
+          image_url
+        )
+      `,
+    )
+    .eq("receiver_id", userId);
+
+  if (error) throw error;
+
+  return data.map((row) => ({
+    ...row.user,
+    sender_id: row.sender_id,
+    is_pending: row.is_pending,
+  }));
+}
