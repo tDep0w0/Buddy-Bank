@@ -2,16 +2,16 @@ import { supabase } from "./supabase";
 
 export async function getFriends(userId: string) {
   const { data, error } = await supabase
-    .from("friends")
+    .from("friend")
     .select(
       `
-        user1:users!Friends_user1_id_fkey (
+        user1:user!Friends_user1_id_fkey (
           id,
           username,
           realname,
           image_url
         ),
-        user2:users!Friends_user2_id_fkey (
+        user2:user!Friends_user2_id_fkey (
           id,
           username,
           realname,
