@@ -1,7 +1,7 @@
-import { router } from "expo-router";
-import { View, Text, FlatList, TextInput, Button, StyleSheet } from "react-native";
+import { View, FlatList, TextInput, StyleSheet } from "react-native";
 import { Colors } from "../../../constants/colors";
 import FriendRow from "../../../components/appTab/FriendRow";
+import { Ionicons } from "@expo/vector-icons";
 
 const FRIENDS = [
   { id: "1", name: "Alice Smith", status:"settled"},
@@ -15,11 +15,16 @@ const FRIENDS = [
 export default function FriendsScreen() {
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="Search by name or email"
-        placeholderTextColor={Colors.textGray}
-        style={styles.search}
-      />
+      <View style={{ position: "relative", width: "100%", height: 75,}}>
+        <Ionicons name="search" size={24} color={Colors.textGray} style={{ position: "absolute", top: "22%", left: 16, zIndex: 1 }} />
+        <TextInput
+          placeholder="Search by name or email"
+          placeholderTextColor={Colors.textGray}
+          style={styles.search}
+        />
+      </View>
+      
+      <View style={styles.separatorLine} />
 
       <FlatList
         data={FRIENDS}
@@ -47,5 +52,12 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 18,
     marginTop: 2,
+    paddingLeft: "12%",
+  },
+  separatorLine: {
+    width: '100%',
+    height: 1,
+    backgroundColor: Colors.textGray,
+    marginBottom: 18,
   },
 });

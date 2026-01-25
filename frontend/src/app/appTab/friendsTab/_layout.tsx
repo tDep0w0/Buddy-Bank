@@ -58,7 +58,7 @@ export default function Layout() {
             fontSize: 18,
             fontWeight: "600",
           },
-          headerTintColor: "white",
+          headerTintColor: Colors.primary,
         }}
       />
 
@@ -76,7 +76,7 @@ export default function Layout() {
             fontSize: 18,
             fontWeight: "600",
           },
-          headerTintColor: "white",
+          headerTintColor: Colors.primary,
         }}
       />
     </Stack>

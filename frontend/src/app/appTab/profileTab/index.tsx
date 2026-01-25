@@ -9,7 +9,7 @@ import Person from '../../../../assets/images/person.svg';
 import UserNameIcon from '../../../../assets/images/@mail.svg';
 import MailIcon from '../../../../assets/images/mail.svg';
 import LogOutIcon from '../../../../assets/images/logout.svg';
-import AvatarPicker from "@/components/appTab/AvatarPicker";
+import AvatarPicker from "@/components/appTab/AvatarPhotoPicker";
 import CustomizeModal from "@/components/appTab/Modal";
 
 export default function ProfileTab() {
