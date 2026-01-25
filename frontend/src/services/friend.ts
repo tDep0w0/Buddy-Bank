@@ -1,6 +1,6 @@
 import { supabase } from "./supabase";
 
-export async function getFriends(userId: string) {
+export async function getFriends(userId: string, query: string = "") {
   const { data, error } = await supabase
     .from("friend")
     .select(
@@ -23,7 +23,19 @@ export async function getFriends(userId: string) {
 
   if (error) throw error;
 
-  return data.map((row) => (row.user1.id !== userId ? row.user1 : row.user2));
+  const friends = data.map((row) =>
+    row.user1.id === userId ? row.user2 : row.user1,
+  );
+
+  if (query) {
+    return friends.filter(
+      (friend) =>
+        friend.username.toLowerCase().includes(query.toLowerCase()) ||
+        friend.realname.toLowerCase().includes(query.toLowerCase()),
+    );
+  }
+
+  return friends;
 }
 
 export async function getFriendRequests(userId: string) {
@@ -45,7 +57,7 @@ export async function getFriendRequests(userId: string) {
 
   return data.map((row) => ({
     ...row.user,
-    sender_id: row.sender_id,
+    user_id: row.sender_id,
     is_pending: row.is_pending,
   }));
 }
