@@ -37,6 +37,7 @@ export default function FriendsScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <FriendRow friend={item} />}
         contentContainerStyle={{ paddingBottom: 24 }}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
