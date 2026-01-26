@@ -9,7 +9,13 @@ const FRIENDS = [
   { id: "3", name: "Charlie Day", status: "settled" },
   { id: "4", name: "David Rose", status:"settled"},
   { id: "5", name: "Elena Fisher", status:"You owe", amount: 5.50},
-  { id: "6", name: "George Thomas", status:"settled"}
+  { id: "6", name: "George Thomas", status:"settled"},
+  { id: "7", name: "Dony Pham", status: "Owes you", amount: 30 },
+  { id: "8", name: "Alex Kelly", status: "You owe", amount: 5.50 },
+  { id: "9", name: "Dennis Nguyen", status: "settled" },
+  { id: "10", name: "Doraemon Lou", status: "Owes you", amount: 21 },
+  { id: "11", name: "Aless Faith", status: "settled" },
+  { id: "12", name: "Thein Wo", status: "You owe", amount: 25 },
 ];
 
 export default function FriendsScreen() {
