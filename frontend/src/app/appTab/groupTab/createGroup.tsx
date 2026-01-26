@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "../../../constants/colors";
 import GroupPhotoPicker from "@/components/appTab/GroupPhotoPicker";
 import GroupNameInput from "@/components/appTab/GroupNameInput";
+import FriendsSelector from "@/components/appTab/FriendsSelector";
 
 
 const CreateGroup = () => {
@@ -29,6 +30,8 @@ const CreateGroup = () => {
           style={styles.search}
         />
       </View>
+      
+      <FriendsSelector/>
     </View>
   );
 };
