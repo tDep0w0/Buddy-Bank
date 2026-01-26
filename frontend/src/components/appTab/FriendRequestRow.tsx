@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Colors } from "@/constants/colors";
-import { Ionicons } from "@expo/vector-icons";
 import {TouchableOpacity} from "react-native";
 
 interface Props {

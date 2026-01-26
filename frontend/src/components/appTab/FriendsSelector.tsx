@@ -89,7 +89,6 @@ const FriendsSelector = () => {
         data={mockFriends}
         keyExtractor={item => item.id}
         renderItem={renderFriend}
-        contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -135,8 +134,6 @@ const styles = StyleSheet.create({
     right: -5,
     backgroundColor: 'white',
     borderRadius: 10,
-  },
-  listContainer: {
   },
   friendItem: {
     flexDirection: 'row',

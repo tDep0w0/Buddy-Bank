@@ -4,6 +4,7 @@ import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AddGroupsButton from "@/components/appTab/AddGroupsButton";
 import { router } from "expo-router";
+import GroupScreenExpanButton from "@/components/appTab/GroupScreenExpandButton";
 
 export default function GroupTab() {
   return (
@@ -17,6 +18,9 @@ export default function GroupTab() {
         />
       </View>
       <View style={styles.separatorLine} />
+
+      <GroupScreenExpanButton/>
+
       <AddGroupsButton onPress={() => router.push("/appTab/groupTab/createGroup")} />
     </View>
   );
