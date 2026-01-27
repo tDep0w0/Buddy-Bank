@@ -33,7 +33,7 @@ export default function GroupScreenExpanButton() {
           <GroupRow
             group={item}
             onPress={() =>
-              router.push(`/appTab/groupTab/groupDetail?id=${item.id}`)
+              router.push(`/otherTab/groupDetail?id=${item.id}`)
             }
           />
         )}

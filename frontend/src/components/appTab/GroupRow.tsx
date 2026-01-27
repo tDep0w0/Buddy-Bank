@@ -27,7 +27,7 @@ export default function GroupRow({ group, onPress, }: { group: Group; onPress: (
     <TouchableOpacity onPress={onPress} style={styles.card}>
       <Image
         style={styles.avatar}
-        source={require("../../../assets/images/default_ava.jpg")}
+        source={require("../../../assets/images/place.jpg")}
       />
       <View style={{ flex: 1 }}>
         <Text style={styles.name}>{group.name}</Text>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 50,
     height: 50,
-    borderRadius: 26,
+    borderRadius: 10,
     backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",

@@ -21,7 +21,7 @@ export default function GroupTab() {
 
       <GroupScreenExpanButton/>
 
-      <AddGroupsButton onPress={() => router.push("/appTab/groupTab/createGroup")} />
+      <AddGroupsButton onPress={() => router.push("/otherTab/createGroup")} />
     </View>
   );
 }
