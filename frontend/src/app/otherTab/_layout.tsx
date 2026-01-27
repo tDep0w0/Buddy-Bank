@@ -48,7 +48,7 @@ export default function Layout() {
         name="groupDetail"
         options={{
           headerShown: true,
-          title: "Group Detail",
+          title: "Group Details",
           headerTitleAlign: "center",
           headerStyle: {
             backgroundColor: Colors.background,
@@ -73,6 +73,25 @@ export default function Layout() {
 
         }}
       />
+
+      <Stack.Screen
+        name="debtDetail"
+        options={{
+          headerShown: true,
+          title: "Debt Detail",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerTitleStyle: {
+            color: "white",
+            fontSize: 18,
+            fontWeight: "600",
+          },
+          headerTintColor: Colors.primary,
+        }}
+      />
+
     </Stack>
   );
 }

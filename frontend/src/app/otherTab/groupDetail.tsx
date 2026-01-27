@@ -5,6 +5,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import EditNDeleteModal from '@/components/appTab/EditNDeleteModal';
+import FriendScreenExpanButton from '@/components/appTab/FriendScreenExpandButton';
 
 export default function GroupDetail() {
   const { id } = useLocalSearchParams();
@@ -12,10 +13,11 @@ export default function GroupDetail() {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalPosition, setModalPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const buttonRef = useRef<View>(null);
+  const [activeTab, setActiveTab] = useState<"expenses" | "balances">("expenses");
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: `Group ${id} Detail`,
+      title: `Group ${id}`,
       headerRight: () => (
         <View ref={buttonRef}>
           <TouchableOpacity onPress={handleButtonPress}>
@@ -35,9 +37,33 @@ export default function GroupDetail() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
-        Welcome to Group Detail Screen. ID: {id}
-      </Text>
+      <View style={styles.tabContainer}>
+        <TouchableOpacity style={[styles.tab, activeTab === "expenses" && styles.activeTab]} onPress={() => setActiveTab("expenses")}
+        >
+          <Text style={[styles.tabText, activeTab === "expenses" && styles.activeTabText]}>
+            Expenses
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.tab, activeTab === "balances" && styles.activeTab]} onPress={() => setActiveTab("balances")}
+        >
+          <Text style={[styles.tabText, activeTab === "balances" && styles.activeTabText]}>
+            Balances
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.wrapper}>
+        {activeTab === "expenses" ? (
+          <View style={styles.expense}>
+            <Text>Expenses Small Tab</Text>
+          </View>
+        ) : (
+          <View style={styles.balance}>
+            <FriendScreenExpanButton/>
+          </View>
+        )}
+      </View>
 
       <EditNDeleteModal
         isVisible={modalVisible}
@@ -53,13 +79,48 @@ export default function GroupDetail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 20,
+    paddingHorizontal: 16,
     backgroundColor: Colors.background,
-    padding: 16,
-    justifyContent: "center",
   },
-  text: {
-    textAlign: "center",
-    color: Colors.primary,
-    fontSize: 20,
+  tabContainer: {
+    flexDirection: "row",
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: Colors.surface,
+    backgroundColor: Colors.surface,
   },
+  tab: {
+    flex: 1,
+    paddingVertical: 18,
+    alignItems: "center",
+    borderRadius: 10,
+    margin: 6,
+
+  },
+  activeTab: {
+    backgroundColor: Colors.primary,
+  },
+  tabText: {
+    color: Colors.textGray,
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  activeTabText: {
+    color: "white",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  wrapper: {
+    flex: 1,
+  },
+  expense: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  balance: {
+    flex: 1,
+    paddingVertical: 16,
+  }
 });

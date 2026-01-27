@@ -6,6 +6,7 @@ type Group = {
   name: string;
   status: string;
   amount?: number;
+  type: "group" | "friend";
 };
 
 export default function GroupRow({ group, onPress, }: { group: Group; onPress: () => void; }) {
@@ -23,11 +24,16 @@ export default function GroupRow({ group, onPress, }: { group: Group; onPress: (
     statusColor = Colors.textGray;
   }
 
+  const avatarRadius = group.type === "group" ? 10 : 30;
+  const avatarSource = group.type === "group" 
+    ? require("../../../assets/images/place.jpg")
+    : require("../../../assets/images/default_ava.jpg");
+
   return (
     <TouchableOpacity onPress={onPress} style={styles.card}>
       <Image
-        style={styles.avatar}
-        source={require("../../../assets/images/place.jpg")}
+        style={[styles.avatar, { borderRadius: avatarRadius }]}
+        source={avatarSource}
       />
       <View style={{ flex: 1 }}>
         <Text style={styles.name}>{group.name}</Text>
@@ -51,7 +57,6 @@ const styles = StyleSheet.create({
   avatar: {
     width: 50,
     height: 50,
-    borderRadius: 10,
     backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
