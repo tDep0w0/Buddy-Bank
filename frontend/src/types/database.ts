@@ -66,9 +66,9 @@ export type Database = {
       expense: {
         Row: {
           amount: number
-          category_id: string
+          category_id: string | null
           created_at: string
-          description: string
+          description: string | null
           group_id: string
           id: string
           payer_id: string
@@ -76,25 +76,39 @@ export type Database = {
         }
         Insert: {
           amount: number
-          category_id?: string
+          category_id?: string | null
           created_at?: string
-          description: string
-          group_id?: string
+          description?: string | null
+          group_id: string
           id?: string
           payer_id: string
           receipt_image_url?: string | null
         }
         Update: {
           amount?: number
-          category_id?: string
+          category_id?: string | null
           created_at?: string
-          description?: string
+          description?: string | null
           group_id?: string
           id?: string
           payer_id?: string
           receipt_image_url?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "expense_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "expense_category"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expense_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "group"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "expenses_payer_id_fkey"
             columns: ["payer_id"]
@@ -134,7 +148,7 @@ export type Database = {
         Insert: {
           amount: number
           created_at?: string
-          expense_id?: string
+          expense_id: string
           id?: string
           receipt_item_id?: string | null
           user_id: string
@@ -317,16 +331,19 @@ export type Database = {
       user_group: {
         Row: {
           balance: number
+          expense: number
           group_id: string
           user_id: string
         }
         Insert: {
           balance?: number
+          expense?: number
           group_id: string
           user_id: string
         }
         Update: {
           balance?: number
+          expense?: number
           group_id?: string
           user_id?: string
         }
