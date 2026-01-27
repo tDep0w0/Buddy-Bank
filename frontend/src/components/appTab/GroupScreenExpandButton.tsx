@@ -8,19 +8,18 @@ type Group = {
   name: string;
   status: "You are owed" | "You owe" | "Settled up";
   amount?: number;
+  type: "group" | "friend";
 };
 
 const mockGroups: Group[] = [
-  { id: "1", name: "Trip to Vegas", status: "You are owed", amount: 70 },
-  { id: "2", name: "House Rent", status: "Settled up" },
-  { id: "3", name: "Sunday Brunch", status: "You owe", amount: 200 },
-  { id: "4", name: "Ski Trip 2024", status: "You are owed", amount: 120 },
-  { id: "5", name: "Office Lunch", status: "You owe", amount: 10 },
-  { id: "6", name: "Thanksgiving Trip", status: "Settled up" },
-  { id: "7", name: "Christmas in Boston", status: "You are owed", amount: 10 },
-  { id: "8", name: "Farewell Lunch", status: "Settled up" },
-  { id: "9", name: "Boston to Hanoi", status: "You are owed", amount: 150 },
-  { id: "10", name: "Vietnam Summer Trip", status: "You owe", amount: 180 },
+  { id: "1", name: "Trip to Vegas", status: "You are owed", amount: 70, type: "group" },
+  { id: "2", name: "House Rent", status: "Settled up", type: "group" },
+  { id: "3", name: "Sunday Brunch", status: "You owe", amount: 200, type: "group" },
+  { id: "4", name: "Ski Trip 2024", status: "You are owed", amount: 120, type: "group" },
+  { id: "5", name: "Office Lunch", status: "You owe", amount: 10, type: "group" },
+  { id: "6", name: "Thanksgiving Trip", status: "Settled up", type: "group" },
+  { id: "7", name: "Christmas in Boston", status: "You are owed", amount: 10, type: "group" },
+  { id: "8", name: "Farewell Lunch", status: "Settled up", type: "group" },
 ];
 
 export default function GroupScreenExpanButton() {
