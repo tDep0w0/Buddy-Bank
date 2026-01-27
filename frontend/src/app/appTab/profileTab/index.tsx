@@ -1,71 +1,100 @@
+import React, { useLayoutEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { router, useNavigation } from "expo-router";
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Alert } from "react-native";
 import { Colors } from "../../../constants/colors";
-import { useLayoutEffect } from "react";
-import ActionButton from "@/components/appTab/Button";
-import ProfileInfoTF from "@/components/appTab/ProfileInfo";
-import React, { useState } from "react";
-import Person from '../../../../assets/images/person.svg';
-import UserNameIcon from '../../../../assets/images/@mail.svg';
-import MailIcon from '../../../../assets/images/mail.svg';
-import LogOutIcon from '../../../../assets/images/logout.svg';
 import AvatarPicker from "@/components/appTab/AvatarPhotoPicker";
+import ProfileInfoTF from "@/components/appTab/ProfileInfo";
+import ActionButton from "@/components/appTab/Button";
 import CustomizeModal from "@/components/appTab/Modal";
+import Person from "../../../../assets/images/person.svg";
+import UserNameIcon from "../../../../assets/images/@mail.svg";
+import MailIcon from "../../../../assets/images/mail.svg";
+import LockIcon from "../../../../assets/images/lock.svg";
+import LogOutIcon from "../../../../assets/images/logout.svg";
 
 export default function ProfileTab() {
-  const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const [isEditing, setIsEditing] = useState(false);
+  const [avatar, setAvatar] = useState<string | undefined>(undefined);
+  const [name, setName] = useState("Alex Johnson");
+  const [username, setUsername] = useState("alexjohnson_99");
+  const [logoutVisible, setLogoutVisible] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => router.push("/appTab/profileTab/editProfile")}>
-          <Text style={{ color: Colors.primary, marginRight: 4, fontSize: 18, fontWeight: '600' }}>Edit</Text>
-        </TouchableOpacity>),
+        <TouchableOpacity
+          onPress={() => {
+            if (isEditing) {
+              console.log("Saving profile:", { name, username });
+            }
+            setIsEditing((prev) => !prev);
+          }}
+        >
+          <Text style={styles.headerButton}>
+            {isEditing ? "Save" : "Edit"}
+          </Text>
+        </TouchableOpacity>
+      ),
       headerBackTitleVisible: false,
       headerTintColor: Colors.primary,
     });
-  }, [navigation]);
+  }, [navigation, isEditing, name, username]);
 
   return (
     <View style={styles.container}>
+      <AvatarPicker
+        avatarUrl={avatar}
+        onChangeAvatar={(uri) => {
+          // cache-busting for iOS
+          setAvatar(`${uri}?t=${Date.now()}`);
+        }}
+      />
 
-      <View style={{ width: '100%', alignItems: 'center', marginBottom: 20 }}>
+      <ProfileInfoTF
+        title="Name"
+        value={name}
+        editable={isEditing}
+        onChangeText={setName}
+        symbol={<Person width={20} height={20} fill="white" />}
+      />
 
-        <AvatarPicker avatarUrl={undefined} onChangeAvatar={() => { }} />
+      <ProfileInfoTF
+        title="Username"
+        value={username}
+        editable={isEditing}
+        onChangeText={setUsername}
+        symbol={<UserNameIcon width={20} height={20} fill="white" />}
+      />
 
-        <ProfileInfoTF
-          title="Name"
-          value="Alex Johnson"
-          symbol={<Person width={20} height={20} fill="white" />}
+      <ProfileInfoTF
+        title="Email"
+        value="alexjohnson_99@gmail.com"
+        symbol={<MailIcon width={20} height={20} fill="white" />}
+      />
+
+      {isEditing && (
+        <ActionButton
+          symbol={<LockIcon width={20} height={20} fill="white" />}
+          type="change"
+          onPress={() => console.log("Change Password")}
         />
-        <ProfileInfoTF
-          title="Username"
-          value="alexjohnson_99"
-          symbol={<UserNameIcon width={20} height={20} fill="white" />}
-        />
-        <ProfileInfoTF
-          title="Email"
-          value="alexjohnson_99@gmail.com"
-          symbol={<MailIcon width={20} height={20} fill="white" />}
-        />
-      </View>
+      )}
+
       <ActionButton
         symbol={<LogOutIcon width={20} height={20} fill={Colors.red} />}
         type="logout"
-        onPress={() => { setModalVisible(true) }}
-
+        onPress={() => setLogoutVisible(true)}
       />
 
       <CustomizeModal
-        visible={modalVisible}
+        visible={logoutVisible}
         title="Log out of your account?"
         text1="Log out"
         text2="Cancel"
         action1={() => router.replace("../../authTab/login")}
-        action2={() => setModalVisible(false)}
+        action2={() => setLogoutVisible(false)}
       />
-
     </View>
   );
 }
@@ -73,8 +102,14 @@ export default function ProfileTab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
+    paddingTop: 20,
+  },
+  headerButton: {
+    color: Colors.primary,
+    marginRight: 4,
+    fontSize: 18,
+    fontWeight: "600",
   },
 });

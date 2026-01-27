@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist":{
+        "NSPhotoLibraryUsageDescription": "This app accesses photos to choose a profile picture",
+        "NSCameraUsageDescription": "This app uses the camera to take a profile photo"
+      }
     },
     "android": {
       "adaptiveIcon": {

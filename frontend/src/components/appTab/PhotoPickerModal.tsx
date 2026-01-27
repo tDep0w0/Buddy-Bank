@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import {Modal,View,TouchableOpacity,Text,StyleSheet,Alert,} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Colors } from "@/constants/colors";
 
@@ -9,28 +9,51 @@ interface ImagePickerModalProps {
   onPick: (uri: string) => void;
 }
 
-export default function ImagePickerModal({ visible, onClose, onPick }: ImagePickerModalProps) {
+export default function ImagePickerModal({
+  visible,
+  onClose,
+  onPick,
+}: ImagePickerModalProps) {
   const pickFromGallery = async () => {
+    const { status } =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+      Alert.alert("Permission required", "Please allow access to photos.");
+      return;
+    }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing:true,
       quality: 1,
     });
 
-    if (!result.canceled) {
+    if (!result.canceled && result.assets?.length) {
       onPick(result.assets[0].uri);
+      onClose();
     }
-    onClose();
   };
 
   const takePhoto = async () => {
+    const { status } =
+      await ImagePicker.requestCameraPermissionsAsync();
+    console.log("Camera permission:", status);
+    if (status !== "granted") {
+      Alert.alert("Permission required", "Please allow camera access.");
+      return;
+    }
+
     const result = await ImagePicker.launchCameraAsync({
+      allowsEditing:true,
       quality: 1,
     });
+    console.log("Camera result:", result);
 
-    if (!result.canceled) {
+    if (!result.canceled && result.assets?.length) {
       onPick(result.assets[0].uri);
+      onClose();
     }
-    onClose();
   };
 
   return (
@@ -50,7 +73,9 @@ export default function ImagePickerModal({ visible, onClose, onPick }: ImagePick
           <View style={styles.divider} />
 
           <TouchableOpacity style={styles.modalItem} onPress={onClose}>
-            <Text style={[styles.modalText, { color: Colors.red }]}>Cancel</Text>
+            <Text style={[styles.modalText, { color: Colors.red }]}>
+              Cancel
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
