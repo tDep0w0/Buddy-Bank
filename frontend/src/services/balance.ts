@@ -1,12 +1,13 @@
 import { supabase } from "./supabase";
 
-export async function getBalances(groupId: string) {
+export async function getBalances(groupId: string, userId: string) {
   const { data, error } = await supabase
     .from("user_group")
     .select(
       `
         balance,
         user (
+          id,
           username,
           image_url
         )
@@ -18,7 +19,10 @@ export async function getBalances(groupId: string) {
 
   return data.map((row) => ({
     balance: row.balance,
-    username: row.user.username,
-    avatar_url: row.user.image_url,
+    user: {
+      id: row.user.id,
+      username: row.user.id === userId ? "You" : row.user.username,
+      image_url: row.user.image_url,
+    },
   }));
 }
