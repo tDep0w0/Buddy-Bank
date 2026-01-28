@@ -40,7 +40,7 @@ const buttonConfig = {
   Add: {
     label: "Add",
     buttonStyle: { backgroundColor: "#22c55e" },
-    textStyle: { color: "#fff" },
+    textStyle: { color: Colors.background },
   },
   Unsend: {
     label: "Unsend",
@@ -57,11 +57,11 @@ const buttonConfig = {
     textStyle: { color: "#a1a1aa" },
   },
   Friends: {
-    label: "Friends",
+    label: "✓  Friends",
     buttonStyle: {
-      backgroundColor: "#1e3a8a",
+      backgroundColor: Colors.background,
     },
-    textStyle: { color: "#fff" },
+    textStyle: { color: "#a1a1aa" },
   },
 };
 
