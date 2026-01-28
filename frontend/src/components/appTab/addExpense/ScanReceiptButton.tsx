@@ -8,7 +8,7 @@ type Props = { onPress: () => void };
 export const ScanReceiptButton: React.FC<Props> = ({ onPress }) => {
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.btn, { opacity: pressed ? 0.9 : 1 }]}>
-      <Ionicons name="scan-outline" size={20} color="#0B0E0C" />
+      <Ionicons name="scan-outline" size={20} color={Colors.background}/>
       <Text style={styles.text}>Scan Receipt</Text>
     </Pressable>
   );
@@ -17,16 +17,17 @@ export const ScanReceiptButton: React.FC<Props> = ({ onPress }) => {
 const styles = StyleSheet.create({
   btn: {
     backgroundColor: Colors.primary,
-    borderRadius: 16,
-    paddingVertical: 14,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    gap: 8,
+    paddingVertical: 18,
+    paddingHorizontal: 120,
+    borderRadius: 12,
   },
   text: {
-    color: '#0B0E0C',
-    fontWeight: '700',
-    fontSize: 16,
+    color: Colors.background,
+    fontWeight: '600',
+    fontSize: 20,
+    marginLeft: 4,
   },
 });

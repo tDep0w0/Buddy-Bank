@@ -12,16 +12,18 @@ export const DateCard: React.FC<{
   date: Date;
   onPress: () => void;
 }> = ({ date, onPress }) => {
-  // UI-only: format đơn giản
-  const display = date.toLocaleString();
+  const display = date.toLocaleString(undefined, {
+    dateStyle: "short",
+    timeStyle: "short",
+  });
   return (
-    <Pressable onPress={onPress} style={styles.card}>
+    <Pressable onPress={onPress} style={styles.card} >
       <View style={styles.cardHeader}>
         <Text style={styles.cardLabel}>DATE</Text>
-        <Ionicons name="calendar-outline" size={18} color="#E6EFE9" />
+        <Ionicons name="calendar-outline" size={20} color='white' />
       </View>
       <Text style={styles.cardValue}>{display}</Text>
-    </Pressable>
+    </Pressable >
   );
 };
 
@@ -33,7 +35,7 @@ export const PaidByCard: React.FC<{
     <Pressable onPress={onPress} style={styles.card}>
       <View style={styles.cardHeader}>
         <Text style={styles.cardLabel}>PAID BY</Text>
-        <Ionicons name="chevron-down" size={18} color="#E6EFE9" />
+        <Ionicons name="chevron-down" size={20} color='white' />
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
         <Avatar name={name} />
@@ -44,28 +46,31 @@ export const PaidByCard: React.FC<{
 };
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', gap: 12 },
+  row: {
+    flexDirection: 'row',
+    gap: 12
+  },
   card: {
     flex: 1,
     backgroundColor: Colors.surface,
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.06)',
+    borderColor: Colors.border,
     padding: 14,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   cardLabel: {
     color: Colors.textGray,
-    fontSize: 12,
+    fontSize: 14,
     letterSpacing: 1.2,
   },
   cardValue: {
-    color: '#E6EFE9',
-    fontSize: 16,
+    color: 'white',
+    fontSize: 17,
     fontWeight: '600',
   },
 });

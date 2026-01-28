@@ -32,19 +32,19 @@ export default function AddExpensesScreen() {
       >
         <AmountHeader amount={amount} onAmountChange={setAmount} />
 
-        <View style={{ height: 16 }} />
+        <View style={{ height: 12 }} />
         <ScanReceiptButton onPress={() => { console.log("Scan Receipt Button Pressed") }} />
 
-        <View style={{ height: 20 }} />
+        <View style={{ height: 22 }} />
         <DescriptionField value={desc} onChange={setDesc} onNotesPress={() => { console.log("On Notes Pressed") }} />
 
-        <View style={{ height: 16 }} />
+        <View style={{ height: 10 }} />
         <RowTwoCols>
           <DateCard date={date} onPress={() => { console.log("Open Date Card Modal") }} />
           <PaidByCard name={paidByName} onPress={() => { console.log("Open Payer Dropbox") }} />
         </RowTwoCols>
 
-        <View style={{ height: 20 }} />
+        <View style={{ height: 24 }} />
         <SplitBreakdown
           participants={members}
           onToggle={(id) => {

@@ -45,7 +45,7 @@ export const AmountHeader: React.FC<Props> = ({ amount, onAmountChange }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingTop: 16,
+    paddingTop: 14,
   },
   label: {
     color: Colors.textGray,

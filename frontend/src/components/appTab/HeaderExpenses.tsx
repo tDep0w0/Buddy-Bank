@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   ele: {
     borderWidth: 1,
-    borderColor: '#aaa',
+    borderColor: Colors.border,
     backgroundColor: Colors.surface,
     marginHorizontal: 4,
     paddingVertical: 18,

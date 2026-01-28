@@ -4,6 +4,7 @@ export const Colors = {
   surface: "rgb(30,38,32)",
   textGray: "#9CA3AF",
   red: "#EF4444",
+  border: 'rgba(255,255,255,0.06)',
 };
 
 // Usage:
