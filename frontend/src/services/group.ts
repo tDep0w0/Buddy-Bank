@@ -41,10 +41,9 @@ export async function getGroupInfo(groupId: string, userId: string) {
         created_at,
         description,
         amount,
-        expense_category (
-          image_url
-        ),
-        user (
+        category,
+        payer:user (
+          id,
           username
         )
       `,
@@ -68,17 +67,28 @@ export async function getGroupInfo(groupId: string, userId: string) {
     (sum, row) => sum + (row.expense || 0),
     0,
   );
-  const expenses = expenseResult.data.map(
-    ({ expense_category, user, ...rest }) => ({
-      ...rest,
-      image_url: expense_category?.image_url ?? null,
-      payer: user.username,
-    }),
-  );
+  const expenses = expenseResult.data;
 
   return {
     userExpense,
     totalExpense,
     expenses,
   };
+}
+
+export async function postGroup(
+  user_id: string,
+  name: string,
+  image_url: string,
+  member_ids: string[],
+) {
+  const { data, error } = await supabase.rpc("create_group", {
+    p_name: name,
+    p_image_url: image_url,
+    p_member_ids: [...member_ids, user_id],
+  });
+
+  if (error) throw error;
+
+  return data;
 }

@@ -11,11 +11,7 @@ export async function getExpenseDetail(expenseId: string, userId: string) {
         description,
         amount,
         receipt_image_url,
-        category:expense_category (
-          id,
-          name,
-          image_url
-        ),
+        category,
         payer:user (
           id,
           username
