@@ -77,18 +77,58 @@ export async function getGroupInfo(groupId: string, userId: string) {
 }
 
 export async function postGroup(
-  user_id: string,
+  userId: string,
   name: string,
-  image_url: string,
-  member_ids: string[],
+  imageUrl: string,
+  memberIds: string[],
 ) {
   const { data, error } = await supabase.rpc("create_group", {
+    p_creator_id: userId,
     p_name: name,
-    p_image_url: image_url,
-    p_member_ids: [...member_ids, user_id],
+    p_image_url: imageUrl,
+    p_member_ids: memberIds,
   });
 
   if (error) throw error;
 
   return data;
+}
+
+export async function updateGroup(
+  userId: string,
+  groupId: string,
+  name: string,
+  imageUrl: string,
+  memberIds: string[],
+) {
+  const { error } = await supabase.rpc("update_group", {
+    p_user_id: userId,
+    p_group_id: groupId,
+    p_name: name,
+    p_image_url: imageUrl,
+    p_member_ids: memberIds,
+  });
+
+  if (error) throw error;
+}
+
+export async function deleteGroup(userId: string, groupId: string) {
+  // Check if user is in the group
+  const { data, error: checkError } = await supabase
+    .from("user_group")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("group_id", groupId);
+
+  if (checkError) throw checkError;
+
+  if (!data || data.length === 0) throw new Error("User is not in the group");
+
+  // Delete the group
+  const { error: deleteError } = await supabase
+    .from("group")
+    .delete()
+    .eq("id", groupId);
+
+  if (deleteError) throw deleteError;
 }
