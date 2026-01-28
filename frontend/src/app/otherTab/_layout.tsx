@@ -92,6 +92,33 @@ export default function Layout() {
         }}
       />
 
+      <Stack.Screen
+        name="addExpense"
+        options={{
+          headerShown: true,
+          title: "Add Expense",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerTitleStyle: {
+            color: "white",
+            fontSize: 18,
+            fontWeight: "600",
+          },
+          headerTintColor: Colors.primary,
+          headerBackTitle: '',
+          headerLeft: () => (
+            <Pressable onPress={() => {
+              router.back()
+              console.log("Back Button Pressed")
+            }
+            }>
+              <Text style={{ color: Colors.primary, fontSize: 18, fontWeight: '600' }}>Cancel</Text>
+            </Pressable>
+          ),
+        }}
+      />
     </Stack>
   );
 }

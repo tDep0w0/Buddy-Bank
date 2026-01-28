@@ -26,7 +26,7 @@ const EditNDeleteModal: React.FC<EditNDeleteModalProps> = ({
       onRequestClose={onClose}>
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContainer, { top: position.y, left: position.x - 135 }]}>
+          <View style={[styles.modalContainer, { top: position.y, left: position.x}]}>
             <TouchableOpacity
               style={styles.option}
               onPress={() => {
@@ -56,8 +56,8 @@ const EditNDeleteModal: React.FC<EditNDeleteModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {

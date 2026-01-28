@@ -73,13 +73,11 @@ export default function ProfileTab() {
         symbol={<MailIcon width={20} height={20} fill="white" />}
       />
 
-      {isEditing && (
-        <ActionButton
-          symbol={<LockIcon width={20} height={20} fill="white" />}
+      <ActionButton
+          symbol={<LockIcon width={20} height={20} fill={Colors.background} />}
           type="change"
           onPress={() => console.log("Change Password")}
-        />
-      )}
+      />
 
       <ActionButton
         symbol={<LogOutIcon width={20} height={20} fill={Colors.red} />}

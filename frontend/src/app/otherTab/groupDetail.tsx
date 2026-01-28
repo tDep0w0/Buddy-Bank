@@ -6,6 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import EditNDeleteModal from '@/components/appTab/EditNDeleteModal';
 import FriendScreenExpanButton from '@/components/appTab/FriendScreenExpandButton';
+import HeaderExpenses from '@/components/appTab/HeaderExpenses';
+import ExpensesContent from '@/components/appTab/ExpensesContent';
+import AddExpensesButton from '@/components/appTab/AddExpenses';
+import { router } from "expo-router";
 
 export default function GroupDetail() {
   const { id } = useLocalSearchParams();
@@ -30,7 +34,7 @@ export default function GroupDetail() {
 
   const handleButtonPress = () => {
     buttonRef.current?.measure((fx, fy, width, height, px, py) => {
-      setModalPosition({ x: px, y: py + height });
+      setModalPosition({ x: px - 130, y: py + height});
     });
     setModalVisible(true);
   };
@@ -56,7 +60,9 @@ export default function GroupDetail() {
       <View style={styles.wrapper}>
         {activeTab === "expenses" ? (
           <View style={styles.expense}>
-            <Text>Expenses Small Tab</Text>
+            <HeaderExpenses expense={{my: 190.50, total: 382.50}}/>
+            <ExpensesContent/>
+            <AddExpensesButton onPress={() => router.push(`/otherTab/addExpense`)}/>
           </View>
         ) : (
           <View style={styles.balance}>
@@ -79,7 +85,7 @@ export default function GroupDetail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+
     paddingHorizontal: 16,
     backgroundColor: Colors.background,
   },
@@ -89,6 +95,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: Colors.surface,
     backgroundColor: Colors.surface,
+    marginTop: 6,
   },
   tab: {
     flex: 1,
@@ -115,9 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   expense: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: '100%',
   },
   balance: {
     flex: 1,

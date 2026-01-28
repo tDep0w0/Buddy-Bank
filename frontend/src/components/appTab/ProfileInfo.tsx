@@ -40,7 +40,7 @@ const ProfileInfoTF: React.FC<ProfileInfoProps> = ({
 
 const styles = StyleSheet.create({
   key: {
-    color: Colors.textGray,
+    color: Colors.background,
     fontWeight: '400',
     marginBottom: 8,
     paddingLeft: 8,

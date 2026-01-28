@@ -33,7 +33,7 @@ const ActionButton: React.FC<Props> = ({type, onPress, symbol}) => {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: "#007AFF",
+        backgroundColor: Colors.primary,
         paddingHorizontal: 16,
         paddingVertical: 16,
         borderRadius: 12,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         width: '90%'
     },
     text: {
-        color: '#fff',
+        color: Colors.background,
         fontSize: 16,
         fontWeight: "600",
     },
@@ -55,10 +55,10 @@ const styles = StyleSheet.create({
         color: Colors.red, 
     },
     changeButton: { 
-        backgroundColor: "#007AFF", 
+        backgroundColor: Colors.primary, 
     }, 
     changeText: { 
-        color: "#fff", 
+        color: Colors.background, 
     },
 });
 
