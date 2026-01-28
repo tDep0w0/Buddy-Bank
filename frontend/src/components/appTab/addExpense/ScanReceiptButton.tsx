@@ -1,16 +1,33 @@
-import React from 'react';
-import { Pressable, Text, StyleSheet } from 'react-native';
+import React, { useState } from "react";
+import { Pressable, Text, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
+import ImagePickerModal from '../PhotoPickerModal';
 
-type Props = { onPress: () => void };
+interface ReceiptProps {
+  receiptUrl?: string;
+  onChangeReceipt: (newUrl: string) => void;
+}
 
-export const ScanReceiptButton: React.FC<Props> = ({ onPress }) => {
+export default function ScanReceiptButton ({receiptUrl, onChangeReceipt} : ReceiptProps){
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.btn, { opacity: pressed ? 0.9 : 1 }]}>
-      <Ionicons name="scan-outline" size={20} color={Colors.background}/>
-      <Text style={styles.text}>Scan Receipt</Text>
-    </Pressable>
+    <View>
+      <Pressable onPress={() => setModalVisible(true)} style={({ pressed }) => [styles.btn, { opacity: pressed ? 0.9 : 1 }]}>
+        <Ionicons name="scan-outline" size={20} color={Colors.background} />
+        <Text style={styles.text}>Scan Receipt</Text>
+      </Pressable>
+
+      <ImagePickerModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onPick={(uri) => {
+          onChangeReceipt(uri);
+          setModalVisible(false);
+        }}
+      />
+    </View>
   );
 };
 
