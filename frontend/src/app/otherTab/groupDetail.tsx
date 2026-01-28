@@ -9,6 +9,7 @@ import FriendScreenExpanButton from '@/components/appTab/FriendScreenExpandButto
 import HeaderExpenses from '@/components/appTab/HeaderExpenses';
 import ExpensesContent from '@/components/appTab/ExpensesContent';
 import AddExpensesButton from '@/components/appTab/AddExpenses';
+import { router } from "expo-router";
 
 export default function GroupDetail() {
   const { id } = useLocalSearchParams();
@@ -61,7 +62,7 @@ export default function GroupDetail() {
           <View style={styles.expense}>
             <HeaderExpenses expense={{my: 190.50, total: 382.50}}/>
             <ExpensesContent/>
-            <AddExpensesButton onPress={() => console.log("Add Expenses Button Pressed")}/>
+            <AddExpensesButton onPress={() => router.push(`/otherTab/addExpense`)}/>
           </View>
         ) : (
           <View style={styles.balance}>
