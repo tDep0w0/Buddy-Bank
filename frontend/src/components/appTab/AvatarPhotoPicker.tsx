@@ -1,31 +1,51 @@
 import React, { useState } from "react";
-import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Colors } from "@/constants/colors";
 import CameraIcon from "../../../assets/images/camera.svg";
 import ImagePickerModal from "./PhotoPickerModal";
+import { AvatarValue } from "@/types/avatar";
+import { DEFAULT_AVATARS } from "../../../assets/images/Generic_Profile_Avatar";
 
 interface AvatarPickerProps {
-  avatarUrl?: string;
-  onChangeAvatar: (newUrl: string) => void;
+  avatar: AvatarValue | null;
+  onChangeAvatar: (avatar: AvatarValue) => void;
 }
 
 export default function AvatarPicker({
-  avatarUrl,
+  avatar,
   onChangeAvatar,
 }: AvatarPickerProps) {
   const [modalVisible, setModalVisible] = useState(false);
+  const renderAvatar = () => {
+   
+    if (!avatar) {
+      return <View style={styles.placeholder} />;
+    }
+    if (avatar.type === "photo") {
+      return (
+        <Image
+          source={{ uri: avatar.uri }}
+          style={styles.avatar}
+        />
+      );
+    }
+    const SvgAvatar = DEFAULT_AVATARS[avatar.key];
+
+    if (!SvgAvatar) {
+      return <View style={styles.placeholder} />;
+    }
+
+    return (
+      <View style={styles.avatar}>
+        <SvgAvatar width="100%" height="100%" />
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <Image key={avatarUrl}
-          source={
-            avatarUrl
-              ? { uri: avatarUrl }
-              : require("../../../assets/images/default_ava.jpg")
-          }
-          style={styles.avatar}
-        />
+        {renderAvatar()}
 
         <View style={styles.cameraButton}>
           <CameraIcon width={22} height={22} fill="white" />
@@ -35,8 +55,8 @@ export default function AvatarPicker({
       <ImagePickerModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        onPick={(uri) => {
-          onChangeAvatar(uri);
+        onPick={(newAvatar) => {
+          onChangeAvatar(newAvatar);
           setModalVisible(false);
         }}
       />
@@ -56,6 +76,17 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: 60,
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  placeholder: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 60,
+    backgroundColor: Colors.surface,
     borderWidth: 2,
     borderColor: Colors.primary,
   },
