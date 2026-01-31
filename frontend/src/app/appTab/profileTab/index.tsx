@@ -1,7 +1,8 @@
 import React, { useLayoutEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {View,Text,StyleSheet,TouchableOpacity,} from "react-native";
 import { router, useNavigation } from "expo-router";
 import { Colors } from "../../../constants/colors";
+import { AvatarValue } from "@/types/avatar";
 import AvatarPicker from "@/components/appTab/AvatarPhotoPicker";
 import ProfileInfoTF from "@/components/appTab/ProfileInfo";
 import ActionButton from "@/components/appTab/Button";
@@ -15,7 +16,10 @@ import LogOutIcon from "../../../../assets/images/logout.svg";
 export default function ProfileTab() {
   const navigation = useNavigation();
   const [isEditing, setIsEditing] = useState(false);
-  const [avatar, setAvatar] = useState<string | undefined>(undefined);
+  const [avatar, setAvatar] = useState<AvatarValue>({
+    type: "default",
+    key: "panda",
+  });
   const [name, setName] = useState("Alex Johnson");
   const [username, setUsername] = useState("alexjohnson_99");
   const [logoutVisible, setLogoutVisible] = useState(false);
@@ -26,7 +30,11 @@ export default function ProfileTab() {
         <TouchableOpacity
           onPress={() => {
             if (isEditing) {
-              console.log("Saving profile:", { name, username });
+              console.log("Saving profile:", {
+                name,
+                username,
+                avatar,
+              });
             }
             setIsEditing((prev) => !prev);
           }}
@@ -39,16 +47,13 @@ export default function ProfileTab() {
       headerBackTitleVisible: false,
       headerTintColor: Colors.primary,
     });
-  }, [navigation, isEditing, name, username]);
+  }, [navigation, isEditing, name, username, avatar]);
 
   return (
     <View style={styles.container}>
       <AvatarPicker
-        avatarUrl={avatar}
-        onChangeAvatar={(uri) => {
-          // cache-busting for iOS
-          setAvatar(`${uri}?t=${Date.now()}`);
-        }}
+        avatar={avatar}
+        onChangeAvatar={setAvatar}
       />
 
       <ProfileInfoTF
@@ -74,9 +79,9 @@ export default function ProfileTab() {
       />
 
       <ActionButton
-          symbol={<LockIcon width={20} height={20} fill={Colors.background} />}
-          type="change"
-          onPress={() => console.log("Change Password")}
+        symbol={<LockIcon width={20} height={20} fill={Colors.background} />}
+        type="change"
+        onPress={() => console.log("Change Password")}
       />
 
       <ActionButton
