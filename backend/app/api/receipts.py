@@ -10,7 +10,7 @@ supabase = create_client(
     os.getenv("SUPABASE_SERVICE_ROLE_KEY")  
 )
 
-@router.post("/analyze")
+@router.post("/")
 async def get_receipt_analysis(
     image_url: str,
     authorization: str = Header(...)

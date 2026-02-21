@@ -14,7 +14,7 @@ dataBase = supabase.create_client(
     )
 
 
-def authentication(email: str, password: str):
+async def authentication(email: str, password: str):
     try:
         supabase.auth.sign_in_with_password({
             "email": email,
@@ -25,7 +25,7 @@ def authentication(email: str, password: str):
         return False
 
     
-def search_user(user_id: str,
+async def search_user(user_id: str,
                   q: str,  
                   table: str = "user"):
     query = q.lower()
@@ -86,3 +86,4 @@ def search_user(user_id: str,
 
 
     
+
