@@ -26,7 +26,7 @@ def authentication(email: str, password: str):
 
     
 def search_user(user_id: str,
-                  q: str = Query(..., min_length = 1),  
+                  q: str,  
                   table: str = "user"):
     query = q.lower()
     users = (
@@ -44,8 +44,8 @@ def search_user(user_id: str,
     friends = (
         dataBase
         .table("friend")
-        .select("user2_id, user1_id")
-        .eq("user1_id", user_id)
+        .select("user1_id, user2_id")
+        .or_(f"user1_id.eq.{user_id},user2_id.eq.{user_id}")
         .execute()
         .data or []
     )
@@ -60,7 +60,8 @@ def search_user(user_id: str,
         dataBase
         .table("friend_request")
         .select("sender_id, receiver_id")
-        .eq("sender_id", user_id)
+        .eq("is_pending", True)
+        .or_(f"sender_id.eq.{user_id},receiver_id.eq.{user_id}")
         .execute()
         .data or []
     )
