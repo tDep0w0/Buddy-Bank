@@ -28,4 +28,4 @@ async def search_endpoint(
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
-    return search_user(user_id=user_id, query=q)
+    return search_user(user_id=user_id, q=q)
