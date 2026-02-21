@@ -5,5 +5,6 @@ from app.api import users
 app = FastAPI()
 
 app.include_router(receipts.router, prefix="/api/receipts", tags=["receipts"])
-app.include_router(search_users.router, prefix ="/api/search_users", tags=["search_users"])
+app.include_router(users.router, prefix ="/api/users", tags=["users"])
+
 
