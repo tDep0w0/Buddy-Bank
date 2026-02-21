@@ -23,7 +23,7 @@ def analyze_receipt(image_path: str) -> dict:
     image_url = get_signed_image_url(image_path)
 
     payload = {
-        "model": "openai/gpt-4o-mini",
+        "model": "google/gemini-3-flash-preview",
         "messages": [
             {"role": "system", "content": "You analyze receipts and return JSON only."},
             {
@@ -48,3 +48,4 @@ def analyze_receipt(image_path: str) -> dict:
     response.raise_for_status()
     raw_text = response.json()["choices"][0]["message"]["content"]
     return safe_json_parse(raw_text)
+
