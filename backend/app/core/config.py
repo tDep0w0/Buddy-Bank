@@ -1,16 +1,18 @@
-import os
-from dotenv import load_dotenv
-from supabase import create_client, Client
-
-load_dotenv()
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings:
-    SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
-    SUPABASE_KEY: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
-    OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
+class Settings(BaseSettings):
+    DB_USER: str = ""
+    DB_PASSWORD: str = ""
+    DB_HOST: str = ""
+    DB_PORT: str = ""
+    DB_NAME: str = ""
+
+    @property
+    def ASYNC_DATABASE_URI(self) -> str:
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}?ssl=require"
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 settings = Settings()
-
-supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
