@@ -1,7 +1,7 @@
-fastapi
-uvicorn[standard]
-python-dotenv
-supabase
-pydantic-settings
-requests
-networkx
+fastapi==0.129.2
+pydantic==2.12.5
+pydantic_settings==2.13.1
+python-dotenv==1.2.1
+Requests==2.32.5
+SQLAlchemy==2.0.46
+supabase==2.28.0
