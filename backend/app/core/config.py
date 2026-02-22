@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from supabase import create_client, Client
 
 
 class Settings(BaseSettings):
@@ -7,6 +8,9 @@ class Settings(BaseSettings):
     DB_HOST: str = ""
     DB_PORT: str = ""
     DB_NAME: str = ""
+    SUPABASE_URL: str = ""
+    SUPABASE_KEY: str = ""
+    OPENROUTER_API_KEY: str = ""
 
     @property
     def ASYNC_DATABASE_URI(self) -> str:
@@ -16,3 +20,8 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+supabase: Client = create_client(
+    "https://bxzvsnxjjohblxhgnqco.supabase.co",
+    "sb_publishable_dvzIEOxkFN1Rcr3G8bReVg_pi1i3cXy",
+)

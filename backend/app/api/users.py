@@ -1,21 +1,13 @@
 from fastapi import APIRouter, Header, HTTPException, Query
 from app.services.user import search_user
-from supabase import create_client
-import os
+from app.core.config import supabase
 
 router = APIRouter()
-
-supabase = create_client(
-    os.getenv("SUPABASE_URL"),
-    os.getenv("SUPABASE_SERVICE_ROLE_KEY")  
-)
-
 
 
 @router.post("/search")
 async def search_endpoint(
-    q: str = Query(..., min_length=1),
-    authorization: str = Header(...)
+    q: str = Query(..., min_length=1), authorization: str = Header(...)
 ):
     if not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Invalid Authorization header")

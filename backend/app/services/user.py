@@ -1,53 +1,38 @@
-import supabase
-import os
-from fastapi import FastAPI, Header, HTTPException, APIRouter, Query
-from dotenv import load_dotenv
-import json
-import re
-import requests
-
-load_dotenv()
-dataBase = supabase.create_client(
-    os.getenv("SUPABASE_URL"),
-    os.getenv("SUPABASE_SERVICE_ROLE_KEY")
-    
-    )
+from app.core.config import supabase
 
 
 async def authentication(email: str, password: str):
     try:
-        supabase.auth.sign_in_with_password({
-            "email": email,
-            "password": password,
-        })
+        supabase.auth.sign_in_with_password(
+            {
+                "email": email,
+                "password": password,
+            }
+        )
         return True
     except Exception:
         return False
 
-    
-async def search_user(user_id: str,
-                  q: str,  
-                  table: str = "user"):
+
+async def search_user(user_id: str, q: str, table: str = "user"):
     query = q.lower()
     users = (
-        dataBase
-        .table(table)
+        supabase.table(table)
         .select("id, realname, username, image_url")
-        .or_(
-            f"username.ilike.%{query}%,realname.ilike.%{query}%"
-        )
+        .or_(f"username.ilike.%{query}%,realname.ilike.%{query}%")
         .limit(20)
         .execute()
-        .data or []
+        .data
+        or []
     )
 
     friends = (
-        dataBase
-        .table("friend")
+        supabase.table("friend")
         .select("user1_id, user2_id")
         .or_(f"user1_id.eq.{user_id},user2_id.eq.{user_id}")
         .execute()
-        .data or []
+        .data
+        or []
     )
 
     friend_ids = set()
@@ -57,13 +42,13 @@ async def search_user(user_id: str,
     friend_ids.discard(user_id)
 
     requests = (
-        dataBase
-        .table("friend_request")
+        supabase.table("friend_request")
         .select("sender_id, receiver_id")
         .eq("is_pending", True)
         .or_(f"sender_id.eq.{user_id},receiver_id.eq.{user_id}")
         .execute()
-        .data or []
+        .data
+        or []
     )
 
     requested_ids = set()
@@ -83,7 +68,3 @@ async def search_user(user_id: str,
             user["status"] = "normal"
 
     return users
-
-
-    
-
