@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Colors } from "@/constants/colors";
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import EditNDeleteModal from '@/components/appTab/EditNDeleteModal';
@@ -9,7 +9,6 @@ import FriendScreenExpanButton from '@/components/appTab/FriendScreenExpandButto
 import HeaderExpenses from '@/components/appTab/HeaderExpenses';
 import ExpensesContent from '@/components/appTab/ExpensesContent';
 import AddExpensesButton from '@/components/appTab/AddExpenses';
-import { router } from "expo-router";
 
 export default function GroupDetail() {
   const { id } = useLocalSearchParams();
@@ -34,7 +33,7 @@ export default function GroupDetail() {
 
   const handleButtonPress = () => {
     buttonRef.current?.measure((fx, fy, width, height, px, py) => {
-      setModalPosition({ x: px - 130, y: py + height});
+      setModalPosition({ x: px - 130, y: py + height });
     });
     setModalVisible(true);
   };
@@ -60,13 +59,13 @@ export default function GroupDetail() {
       <View style={styles.wrapper}>
         {activeTab === "expenses" ? (
           <View style={styles.expense}>
-            <HeaderExpenses expense={{my: 190.50, total: 382.50}}/>
-            <ExpensesContent/>
-            <AddExpensesButton onPress={() => router.push(`/otherTab/addExpense`)}/>
+            <HeaderExpenses expense={{ my: 190.50, total: 382.50 }} />
+            <ExpensesContent />
+            <AddExpensesButton onPress={() => router.push(`/otherTab/addExpense`)} />
           </View>
         ) : (
           <View style={styles.balance}>
-            <FriendScreenExpanButton/>
+            <FriendScreenExpanButton />
           </View>
         )}
       </View>
