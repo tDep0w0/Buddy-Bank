@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, Alert, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { Colors } from "../../constants/colors";
 
@@ -9,22 +9,50 @@ import AuthButton from "../../components/authTab/AuthButton";
 import GoogleAuthButton from "../../components/authTab/GoogleAuthButton";
 import AuthFooter from "../../components/authTab/AuthFooter";
 
+import { signInWithEmailPassword, signInWithGoogle } from '../../services/auth';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleLogin = () => {
-    router.replace("/appTab/groupTab");
+  const handleLogin = async () => {
+    try {
+      setSubmitting(true);
+      const res = await signInWithEmailPassword(email.trim(), password);
+      if (!res.ok) {
+        Alert.alert("Incorrect email or password", res.message);
+        return;
+      }
+      router.replace("/appTab/groupTab");
+    } catch (e: any) {
+      Alert.alert("Error", e?.message ?? "An unknown error has occurred.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleSignUp = () => {
     router.replace("/authTab/signup");
   };
 
-  const handleGoogleLogin = () => {
-    // Xử lý đăng nhập bằng Google ở đây 
-    console.log("Google login pressed");
+  const handleGoogleLogin = async () => {
+    try {
+      setSubmitting(true);
+      const res = await signInWithGoogle();
+      if (!res.ok) {
+        Alert.alert("Google Sign-In", res.message);
+        return;
+      }
+      // Với OAuth, Supabase sẽ callback -> tạo session.
+      // Nếu bạn đã set listener onAuthStateChange (mục 4), nó sẽ tự điều hướng.
+      // Hoặc bạn có thể poll getSession sau vài giây rồi replace:
+      // router.replace("/appTab/groupTab");
+    } catch (e: any) {
+      Alert.alert("Error", e?.message ?? "Cannot login with Google");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -46,6 +74,7 @@ export default function LoginScreen() {
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
+          autoCapitalize="none"
         />
         <AuthInput
           name="Password"
@@ -56,9 +85,11 @@ export default function LoginScreen() {
         />
       </View>
 
-      <AuthButton title="Login" onPress={handleLogin} />
+      <AuthButton title={submitting ? "Please wait..." : "Login"} onPress={handleLogin} disabled={submitting} />
 
-      <GoogleAuthButton onPress={handleGoogleLogin} />
+      <GoogleAuthButton onPress={handleGoogleLogin} disabled={submitting} />
+
+      {submitting ? <ActivityIndicator style={{ marginTop: 12 }} /> : null}
 
       <AuthFooter
         question="Don't have an account?"
