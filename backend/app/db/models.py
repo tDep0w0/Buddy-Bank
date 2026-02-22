@@ -189,6 +189,21 @@ class Group(Base):
     )
     image_url: Mapped[Optional[str]] = mapped_column(Text)
 
+    def __init__(
+        self,
+        *,
+        name: str,
+        image_url: Optional[str] = None,
+        id: Optional[uuid.UUID | str] = None,
+        created_at: Optional[datetime.datetime] = None,
+    ) -> None:
+        self.name = name
+        self.image_url = image_url
+        if id is not None:
+            self.id = id if isinstance(id, uuid.UUID) else uuid.UUID(id)
+        if created_at is not None:
+            self.created_at = created_at
+
     debt: Mapped[list["Debt"]] = relationship("Debt", back_populates="group")
     expense: Mapped[list["Expense"]] = relationship("Expense", back_populates="group")
     user_group: Mapped[list["UserGroup"]] = relationship(
@@ -306,6 +321,22 @@ class User(Users):
     )
     image_url: Mapped[Optional[str]] = mapped_column(Text)
 
+    def __init__(
+        self,
+        *,
+        id: uuid.UUID | str,
+        username: str,
+        realname: str,
+        image_url: Optional[str] = None,
+        created_at: Optional[datetime.datetime] = None,
+    ) -> None:
+        self.id = id if isinstance(id, uuid.UUID) else uuid.UUID(id)
+        self.username = username
+        self.realname = realname
+        self.image_url = image_url
+        if created_at is not None:
+            self.created_at = created_at
+
     user2: Mapped[list["User"]] = relationship(
         "User",
         secondary="friend",
@@ -383,6 +414,32 @@ class Debt(Base):
         Boolean, nullable=False, server_default=text("false")
     )
 
+    def __init__(
+        self,
+        *,
+        group_id: uuid.UUID | str,
+        lender_id: uuid.UUID | str,
+        borrower_id: uuid.UUID | str,
+        amount: float,
+        is_paid: bool = False,
+        created_at: Optional[datetime.datetime] = None,
+    ) -> None:
+        self.group_id = (
+            group_id if isinstance(group_id, uuid.UUID) else uuid.UUID(group_id)
+        )
+        self.lender_id = (
+            lender_id if isinstance(lender_id, uuid.UUID) else uuid.UUID(lender_id)
+        )
+        self.borrower_id = (
+            borrower_id
+            if isinstance(borrower_id, uuid.UUID)
+            else uuid.UUID(borrower_id)
+        )
+        self.amount = amount
+        self.is_paid = is_paid
+        if created_at is not None:
+            self.created_at = created_at
+
     borrower: Mapped["User"] = relationship(
         "User", foreign_keys=[borrower_id], back_populates="debt_borrower"
     )
@@ -432,6 +489,38 @@ class Expense(Base):
     )
     description: Mapped[Optional[str]] = mapped_column(Text)
     receipt_image_url: Mapped[Optional[str]] = mapped_column(Text)
+
+    def __init__(
+        self,
+        *,
+        group_id: uuid.UUID | str,
+        payer_id: uuid.UUID | str,
+        amount: float,
+        category: ExpenseCategory | str = ExpenseCategory.GENERAL,
+        description: Optional[str] = None,
+        receipt_image_url: Optional[str] = None,
+        id: Optional[uuid.UUID | str] = None,
+        created_at: Optional[datetime.datetime] = None,
+    ) -> None:
+        self.group_id = (
+            group_id if isinstance(group_id, uuid.UUID) else uuid.UUID(group_id)
+        )
+        self.payer_id = (
+            payer_id if isinstance(payer_id, uuid.UUID) else uuid.UUID(payer_id)
+        )
+        self.amount = amount
+        self.category = (
+            category
+            if isinstance(category, ExpenseCategory)
+            else ExpenseCategory(category)
+        )
+        self.description = description
+        self.receipt_image_url = receipt_image_url
+
+        if id is not None:
+            self.id = id if isinstance(id, uuid.UUID) else uuid.UUID(id)
+        if created_at is not None:
+            self.created_at = created_at
 
     group: Mapped["Group"] = relationship("Group", back_populates="expense")
     payer: Mapped["User"] = relationship("User", back_populates="expense")
@@ -486,6 +575,24 @@ class FriendRequest(Base):
     )
     receiver_id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True)
 
+    def __init__(
+        self,
+        *,
+        sender_id: uuid.UUID | str,
+        receiver_id: uuid.UUID | str,
+        created_at: Optional[datetime.datetime] = None,
+    ) -> None:
+        self.sender_id = (
+            sender_id if isinstance(sender_id, uuid.UUID) else uuid.UUID(sender_id)
+        )
+        self.receiver_id = (
+            receiver_id
+            if isinstance(receiver_id, uuid.UUID)
+            else uuid.UUID(receiver_id)
+        )
+        if created_at is not None:
+            self.created_at = created_at
+
     receiver: Mapped["User"] = relationship(
         "User", foreign_keys=[receiver_id], back_populates="friend_request_receiver"
     )
@@ -523,6 +630,21 @@ class UserGroup(Base):
         Double(53), nullable=False, server_default=text("'0'::double precision")
     )
 
+    def __init__(
+        self,
+        *,
+        user_id: uuid.UUID | str,
+        group_id: uuid.UUID | str,
+        balance: float = 0.0,
+        expense: float = 0.0,
+    ) -> None:
+        self.user_id = user_id if isinstance(user_id, uuid.UUID) else uuid.UUID(user_id)
+        self.group_id = (
+            group_id if isinstance(group_id, uuid.UUID) else uuid.UUID(group_id)
+        )
+        self.balance = balance
+        self.expense = expense
+
     group: Mapped["Group"] = relationship("Group", back_populates="user_group")
     user: Mapped["User"] = relationship("User", back_populates="user_group")
 
@@ -551,6 +673,25 @@ class ReceiptItem(Base):
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(True), nullable=False, server_default=text("now()")
     )
+
+    def __init__(
+        self,
+        *,
+        expense_id: uuid.UUID | str,
+        name: str,
+        price: float,
+        id: Optional[uuid.UUID | str] = None,
+        created_at: Optional[datetime.datetime] = None,
+    ) -> None:
+        self.expense_id = (
+            expense_id if isinstance(expense_id, uuid.UUID) else uuid.UUID(expense_id)
+        )
+        self.name = name
+        self.price = price
+        if id is not None:
+            self.id = id if isinstance(id, uuid.UUID) else uuid.UUID(id)
+        if created_at is not None:
+            self.created_at = created_at
 
     expense: Mapped["Expense"] = relationship("Expense", back_populates="receipt_item")
     expense_split: Mapped[list["ExpenseSplit"]] = relationship(
@@ -595,6 +736,32 @@ class ExpenseSplit(Base):
         Uuid, primary_key=True, server_default=text("gen_random_uuid()")
     )
     receipt_item_id: Mapped[Optional[uuid.UUID]] = mapped_column(Uuid)
+
+    def __init__(
+        self,
+        *,
+        expense_id: uuid.UUID | str,
+        user_id: uuid.UUID | str,
+        amount: float,
+        receipt_item_id: Optional[uuid.UUID | str] = None,
+        id: Optional[uuid.UUID | str] = None,
+        created_at: Optional[datetime.datetime] = None,
+    ) -> None:
+        self.expense_id = (
+            expense_id if isinstance(expense_id, uuid.UUID) else uuid.UUID(expense_id)
+        )
+        self.user_id = user_id if isinstance(user_id, uuid.UUID) else uuid.UUID(user_id)
+        self.amount = amount
+        if receipt_item_id is not None:
+            self.receipt_item_id = (
+                receipt_item_id
+                if isinstance(receipt_item_id, uuid.UUID)
+                else uuid.UUID(receipt_item_id)
+            )
+        if id is not None:
+            self.id = id if isinstance(id, uuid.UUID) else uuid.UUID(id)
+        if created_at is not None:
+            self.created_at = created_at
 
     expense: Mapped["Expense"] = relationship("Expense", back_populates="expense_split")
     receipt_item: Mapped[Optional["ReceiptItem"]] = relationship(
