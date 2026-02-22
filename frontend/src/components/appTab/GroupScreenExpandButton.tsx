@@ -1,4 +1,6 @@
-import { View, FlatList, StyleSheet } from "react-native";
+// src/components/appTab/GroupScreenExpandButton.tsx
+import React from "react";
+import { View, FlatList, StyleSheet, RefreshControl } from "react-native";
 import GroupRow from "../appTab/GroupRow";
 import { Colors } from "../../constants/colors";
 import { router } from "expo-router";
@@ -8,34 +10,34 @@ type Group = {
   name: string;
   status: "You are owed" | "You owe" | "Settled up";
   amount?: number;
-  type: "group" | "friend";
+  type: "group" | "friend"; 
+  image_url?: string | null;
 };
 
-const mockGroups: Group[] = [
-  { id: "1", name: "Trip to Vegas", status: "You are owed", amount: 70, type: "group" },
-  { id: "2", name: "House Rent", status: "Settled up", type: "group" },
-  { id: "3", name: "Sunday Brunch", status: "You owe", amount: 200, type: "group" },
-  { id: "4", name: "Ski Trip 2024", status: "You are owed", amount: 120, type: "group" },
-  { id: "5", name: "Office Lunch", status: "You owe", amount: 10, type: "group" },
-  { id: "6", name: "Thanksgiving Trip", status: "Settled up", type: "group" },
-  { id: "7", name: "Christmas in Boston", status: "You are owed", amount: 10, type: "group" },
-  { id: "8", name: "Farewell Lunch", status: "Settled up", type: "group" },
-];
+type Props = {
+  groups: Group[];
+  refreshing?: boolean;
+  onRefresh?: () => void;
+};
 
-export default function GroupScreenExpanButton() {
+export default function GroupScreenExpanButton({ groups, refreshing = false, onRefresh }: Props) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={mockGroups}
+        data={groups}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <GroupRow
             group={item}
-            onPress={() =>
-              router.push(`/otherTab/groupDetail?id=${item.id}`)
-            }
+            onPress={() => router.push(`/otherTab/groupDetail?id=${item.id}`)}
           />
         )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />
+        }
+        ListEmptyComponent={
+          <View style={{ paddingVertical: 20 }} />
+        }
         showsVerticalScrollIndicator={false}
       />
     </View>
