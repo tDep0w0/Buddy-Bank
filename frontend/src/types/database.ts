@@ -66,7 +66,7 @@ export type Database = {
       expense: {
         Row: {
           amount: number
-          category_id: string | null
+          category: Database["public"]["Enums"]["expense_category"]
           created_at: string
           description: string | null
           group_id: string
@@ -76,7 +76,7 @@ export type Database = {
         }
         Insert: {
           amount: number
-          category_id?: string | null
+          category?: Database["public"]["Enums"]["expense_category"]
           created_at?: string
           description?: string | null
           group_id: string
@@ -86,7 +86,7 @@ export type Database = {
         }
         Update: {
           amount?: number
-          category_id?: string | null
+          category?: Database["public"]["Enums"]["expense_category"]
           created_at?: string
           description?: string | null
           group_id?: string
@@ -95,13 +95,6 @@ export type Database = {
           receipt_image_url?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "expense_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "expense_category"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "expense_group_id_fkey"
             columns: ["group_id"]
@@ -117,24 +110,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      expense_category: {
-        Row: {
-          id: string
-          image_url: string | null
-          name: string
-        }
-        Insert: {
-          id?: string
-          image_url?: string | null
-          name: string
-        }
-        Update: {
-          id?: string
-          image_url?: string | null
-          name?: string
-        }
-        Relationships: []
       }
       expense_split: {
         Row: {
@@ -218,19 +193,16 @@ export type Database = {
       friend_request: {
         Row: {
           created_at: string
-          is_pending: boolean
           receiver_id: string
           sender_id: string
         }
         Insert: {
           created_at?: string
-          is_pending?: boolean
           receiver_id: string
           sender_id: string
         }
         Update: {
           created_at?: string
-          is_pending?: boolean
           receiver_id?: string
           sender_id?: string
         }
@@ -369,10 +341,37 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      accept_friend_request: {
+        Args: { p_sender_id: string; p_user_id: string }
+        Returns: undefined
+      }
+      create_group: {
+        Args: {
+          p_creator_id: string
+          p_image_url: string
+          p_member_ids: string[]
+          p_name: string
+        }
+        Returns: string
+      }
+      update_group: {
+        Args: {
+          p_group_id: string
+          p_image_url: string
+          p_member_ids: string[]
+          p_name: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      expense_category:
+        | "general"
+        | "fd"
+        | "transport"
+        | "shopping"
+        | "entertainment"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -499,6 +498,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      expense_category: [
+        "general",
+        "fd",
+        "transport",
+        "shopping",
+        "entertainment",
+      ],
+    },
   },
 } as const
