@@ -1,7 +1,7 @@
 import { Split } from "@/types/expense";
 import { supabase } from "./supabase";
 
-export async function getExpenseDetail(expenseId: string, userId: string) {
+export async function getExpense(expenseId: string, userId: string) {
   const expensePromise = supabase
     .from("expense")
     .select(
@@ -101,4 +101,56 @@ export async function getExpenseDetail(expenseId: string, userId: string) {
   if (response.payer.id === userId) response.payer.username = "you";
 
   return response;
+}
+
+export async function updateExpense(expenseId: string, expenseData: any) {
+  const API_URL =
+    process.env.EXPO_PUBLIC_API_URL || "http://localhost:8000/api";
+
+  const response = await fetch(`${API_URL}/expenses/${expenseId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(expenseData),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || "Failed to update expense");
+  }
+
+  return await response.json();
+}
+
+export async function deleteExpense(expenseId: string) {
+  const API_URL =
+    process.env.EXPO_PUBLIC_API_URL || "http://localhost:8000/api";
+  const response = await fetch(`${API_URL}/expenses/${expenseId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || "Failed to delete expense");
+  }
+}
+
+export async function postExpense(expenseData: any) {
+  const API_URL =
+    process.env.EXPO_PUBLIC_API_URL || "http://localhost:8000/api";
+  const response = await fetch(`${API_URL}/expenses/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(expenseData),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || "Failed to create expense");
+  }
+
+  return await response.json();
 }
