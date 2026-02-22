@@ -96,6 +96,49 @@ async def create_group(jwt: str,
     return {"message": "Group created successfully"}
 
 
+@router.post("/")
+async def update_group(group_id: str,
+                       name: str,
+                       image_url: str,
+                       member_ids: list[str],
+                       db: AsyncSession = Depends(get_db)):
+    member_ids = set(member_ids)
+
+    result = await db.execute(
+        select(Group).where(Group.id == group_id)
+    )
+    group = result.scalar_one_or_none()
+
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+    
+    group.name = name
+    group.image_url = image_url
+
+    result = await db.execute(
+        select(UserGroup).where(UserGroup.group_id == group_id)
+    )
+    members = result.scalars().all()
+
+
+    for member in members:
+        await db.delete(member)
+
+    for id in member_ids:
+        db.add(UserGroup(
+            user_id = id,
+            group_id = group_id
+        ))
+
+    await db.commit()
+    return {"message": "Group updated successfully"}
+
+
+
+
+
+
+
 
 
 
