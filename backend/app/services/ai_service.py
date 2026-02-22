@@ -19,8 +19,7 @@ def safe_json_parse(text: str) -> dict:
     raise ValueError("No valid JSON found")
 
 
-def analyze_receipt(image_path: str) -> dict:
-    image_url = get_signed_image_url(image_path)
+def analyze_receipt(image_url: str) -> dict:
 
     payload = {
         "model": "google/gemini-3-flash-preview",
