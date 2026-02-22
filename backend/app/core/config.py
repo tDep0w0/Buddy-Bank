@@ -21,7 +21,4 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-supabase: Client = create_client(
-    "https://bxzvsnxjjohblxhgnqco.supabase.co",
-    "sb_publishable_dvzIEOxkFN1Rcr3G8bReVg_pi1i3cXy",
-)
+supabase: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
