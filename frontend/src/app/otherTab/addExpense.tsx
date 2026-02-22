@@ -10,7 +10,7 @@ import { RowTwoCols, DateCard, PaidByCard } from '@/components/appTab/addExpense
 import { SplitBreakdown, Participant } from '@/components/appTab/addExpense/SplitBreakdown';
 import AddExpensesButton from '@/components/appTab/AddExpenses';
 
-import SelectCategoriesModal, { Category } from '@/components/appTab/addExpense/SelectCategoriesModal';
+import SelectCategoriesModal from '@/components/appTab/addExpense/SelectCategoriesModal';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 
 // ---- Dummy data for UI ----
@@ -39,6 +39,9 @@ export default function AddExpensesScreen() {
   const [categoryId, setCategoryId] = useState<string>('general');
   const [categoryModal, setCategoryModal] = useState(false);
 
+  // NEW: Keep the URL of the selected invoice to change the status of the ScanReceiptButton.
+  const [receiptUrl, setReceiptUrl] = useState<string | undefined>(undefined);
+
   return (
     <View style={styles.screen}>
       <ScrollView
@@ -49,10 +52,18 @@ export default function AddExpensesScreen() {
 
         <View style={{ height: 12 }} />
         <ScanReceiptButton
+          // Important: Pass receiptUrl so the button changes to "View Item" once the image is displayed.
+          receiptUrl={receiptUrl}
           onChangeReceipt={(newUrl: string) => {
+            setReceiptUrl(newUrl);
             // Backend later: upload picture/scan OCR
             console.log('TODO backend: handle receipt image URL', { newUrl });
           }}
+          // The parameters for the Scan Receipt Button to automatically push when an image is available.
+          amount={amount}
+          desc={desc}
+          date={date}
+          paidById={paidById}
         />
 
         <View style={{ height: 22 }} />
@@ -60,8 +71,6 @@ export default function AddExpensesScreen() {
           value={desc}
           onChange={setDesc}
           onNotesPress={() => {
-            // Future Backend: open notes modal
-            console.log('TODO backend: open notes modal');
             setCategoryModal(true);
           }}
         />
@@ -69,8 +78,9 @@ export default function AddExpensesScreen() {
         <SelectCategoriesModal
           visible={categoryModal}
           categories={DEFAULT_CATEGORIES}
-          selectedId={categoryId} onSelect={(id) => {
-            setCategoryId(id);    // TODO backend: gắn category cho expense    
+          selectedId={categoryId}
+          onSelect={(id) => {
+            setCategoryId(id);    // TODO backend: gắn category cho expense
             const chosen = DEFAULT_CATEGORIES.find(c => c.id === id);
             console.log('Selected category (UI)', chosen);
           }}
@@ -130,7 +140,10 @@ export default function AddExpensesScreen() {
             date: date.toISOString(),
             paidById,
             members,
+            receiptUrl, // có thể gửi kèm receiptUrl
+            categoryId,
           });
+
           router.back();
         }}
       />

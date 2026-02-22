@@ -3,20 +3,59 @@ import { Pressable, Text, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
 import ImagePickerModal from '../PhotoPickerModal';
+import { useRouter } from 'expo-router';
 
-interface ReceiptProps {
+interface ScanReceiptButtonProps {
   receiptUrl?: string;
   onChangeReceipt: (newUrl: string) => void;
+
+  amount?: number | string | null;
+  desc?: string;
+  date?: Date;              // nên là Date để toISOString()
+  paidById?: string;
 }
 
-export default function ScanReceiptButton ({receiptUrl, onChangeReceipt} : ReceiptProps){
+export default function ScanReceiptButton({
+  receiptUrl,
+  onChangeReceipt,
+  amount,
+  desc,
+  date,
+  paidById
+}: ScanReceiptButtonProps) {
   const [modalVisible, setModalVisible] = useState(false);
+  const router = useRouter();
+
+  const hasImage = !!receiptUrl;
+  const buttonLabel = hasImage ? 'View Item' : 'Scan Receipt';
+  const iconName = hasImage ? 'eye-outline' : 'scan-outline';
+
+  const handlePress = () => {
+    if (!hasImage) {
+      setModalVisible(true);
+      return;
+    }
+
+    // Nếu đã có ảnh, điều hướng
+    router.push({
+      pathname: '/otherTab/review-item',
+      params: {
+        amount: String(amount ?? 0),
+        desc: desc ?? '',
+        date: (date ?? new Date()).toISOString(),
+        paidById: paidById ?? '',
+      },
+    });
+  };
 
   return (
     <View>
-      <Pressable onPress={() => setModalVisible(true)} style={({ pressed }) => [styles.btn, { opacity: pressed ? 0.9 : 1 }]}>
-        <Ionicons name="scan-outline" size={20} color={Colors.background} />
-        <Text style={styles.text}>Scan Receipt</Text>
+      <Pressable
+        onPress={handlePress}
+        style={({ pressed }) => [styles.btn, { opacity: pressed ? 0.9 : 1 }]}
+      >
+        <Ionicons name={iconName} size={20} color={Colors.background} />
+        <Text style={styles.text}>{buttonLabel}</Text>
       </Pressable>
 
       <ImagePickerModal
@@ -29,7 +68,7 @@ export default function ScanReceiptButton ({receiptUrl, onChangeReceipt} : Recei
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   btn: {

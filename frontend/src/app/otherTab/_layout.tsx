@@ -93,6 +93,114 @@ export default function Layout() {
       />
 
       <Stack.Screen
+        name="expense-detail/index"
+        options={{
+          headerShown: true,
+          title: "Expense Detail",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerTitleStyle: {
+            color: "white",
+            fontSize: 18,
+            fontWeight: "600",
+          },
+          headerTintColor: Colors.primary,
+        }}
+      />
+
+      <Stack.Screen
+        name="expense-detail/view-receipt"
+        options={{
+          headerShown: true,
+          title: "Expense Detail",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerTitleStyle: {
+            color: "white",
+            fontSize: 18,
+            fontWeight: "600",
+          },
+          headerTintColor: Colors.primary,
+        }}
+      />
+
+      <Stack.Screen
+        name="review-item/index"
+        options={{
+          headerShown: true,
+          title: "Review Item",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerTitleStyle: {
+            color: "white",
+            fontSize: 18,
+            fontWeight: "600",
+          },
+          headerTintColor: Colors.primary,
+        }}
+      />
+
+      <Stack.Screen
+        name="review-item/view-receipt"
+        options={{
+          headerShown: true,
+          title: "View Receipt",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerTitleStyle: {
+            color: "white",
+            fontSize: 18,
+            fontWeight: "600",
+          },
+          headerTintColor: Colors.primary,
+        }}
+      />
+
+      <Stack.Screen
+        name="review-item/add-missing-item"
+        options={{
+          headerShown: true,
+          title: "Add Missing Item",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerTitleStyle: {
+            color: "white",
+            fontSize: 18,
+            fontWeight: "600",
+          },
+          headerTintColor: Colors.primary,
+        }}
+      />
+
+      <Stack.Screen
+        name="review-item/edit-item"
+        options={{
+          headerShown: true,
+          title: "Edit Item",
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerTitleStyle: {
+            color: "white",
+            fontSize: 18,
+            fontWeight: "600",
+          },
+          headerTintColor: Colors.primary,
+        }}
+      />
+
+      <Stack.Screen
         name="addExpense"
         options={{
           headerShown: true,
