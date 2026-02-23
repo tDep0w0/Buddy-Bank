@@ -1,46 +1,93 @@
-import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import React, { useState } from "react";
+import { ScrollView, View, StyleSheet, Alert } from "react-native";
+import { router } from "expo-router";
 
-import { Colors } from '@/constants/colors';
-import { AmountHeader } from '@/components/appTab/addExpense/AmountHeader';
-import ScanReceiptButton from '@/components/appTab/addExpense/ScanReceiptButton';
-import { DescriptionField } from '@/components/appTab/addExpense/DescriptionField';
-import { RowTwoCols, DateCard, PaidByCard } from '@/components/appTab/addExpense/InfoCard';
-import { SplitBreakdown, Participant } from '@/components/appTab/addExpense/SplitBreakdown';
-import AddExpensesButton from '@/components/appTab/AddExpenses';
+import { Colors } from "@/constants/colors";
+import { AmountHeader } from "@/components/appTab/addExpense/AmountHeader";
+import ScanReceiptButton from "@/components/appTab/addExpense/ScanReceiptButton";
+import { DescriptionField } from "@/components/appTab/addExpense/DescriptionField";
+import {
+  RowTwoCols,
+  DateCard,
+  PaidByCard,
+} from "@/components/appTab/addExpense/InfoCard";
+import {
+  SplitBreakdown,
+  Participant,
+} from "@/components/appTab/addExpense/SplitBreakdown";
+import AddExpensesButton from "@/components/appTab/AddExpenses";
 
-import SelectCategoriesModal from '@/components/appTab/addExpense/SelectCategoriesModal';
-import { DEFAULT_CATEGORIES } from '@/constants/categories';
+import SelectCategoriesModal from "@/components/appTab/addExpense/SelectCategoriesModal";
+import { DEFAULT_CATEGORIES } from "@/constants/categories";
+import { scanReceipt } from "@/services/receipt";
+import { reviewStore } from "@/services/reviewStore";
 
 // ---- Dummy data for UI ----
 const initialMembers: Participant[] = [
-  { id: 'you', name: 'You', avatar: undefined, included: true, amount: 0 },
-  { id: 'alice', name: 'Alice', avatar: undefined, included: true, amount: 0 },
-  { id: 'bob', name: 'Bob', avatar: undefined, included: true, amount: 0 },
+  { id: "you", name: "You", avatar: undefined, included: true, amount: 0 },
+  { id: "alice", name: "Alice", avatar: undefined, included: true, amount: 0 },
+  { id: "bob", name: "Bob", avatar: undefined, included: true, amount: 0 },
 ];
 
 // Use for PaidByCard (UI-only)
 type Person = { id: string; name: string; avatar?: string };
 const people: Person[] = [
-  { id: 'you', name: 'You' },
-  { id: 'alice', name: 'Alice' },
-  { id: 'bob', name: 'Bob' },
+  { id: "you", name: "You" },
+  { id: "alice", name: "Alice" },
+  { id: "bob", name: "Bob" },
 ];
 
 export default function AddExpensesScreen() {
   // State only use for UI, not included backend/ logic
   const [amount, setAmount] = useState<number>(0);
-  const [desc, setDesc] = useState('');
-  const [date, setDate] = useState(new Date());        // <- feed for DateCard
-  const [paidById, setPaidById] = useState<string>('you'); // <- feed for PaidByCard
+  const [desc, setDesc] = useState("");
+  const [date, setDate] = useState(new Date()); // <- feed for DateCard
+  const [paidById, setPaidById] = useState<string>("you"); // <- feed for PaidByCard
   const [members, setMembers] = useState<Participant[]>(initialMembers);
 
-  const [categoryId, setCategoryId] = useState<string>('general');
+  const [categoryId, setCategoryId] = useState<string>("general");
   const [categoryModal, setCategoryModal] = useState(false);
 
-  // NEW: Keep the URL of the selected invoice to change the status of the ScanReceiptButton.
+  // Receipt scanning state
   const [receiptUrl, setReceiptUrl] = useState<string | undefined>(undefined);
+  const [scanning, setScanning] = useState(false);
+
+  // Handle receipt image picked from camera/gallery
+  const handleReceiptPicked = async (localUri: string) => {
+    setReceiptUrl(localUri); // show button as "picked"
+    setScanning(true);
+    try {
+      const { imageUrl, items } = await scanReceipt(localUri);
+      setReceiptUrl(imageUrl); // update to remote URL
+
+      // Auto-fill total from receipt items
+      const total = items.reduce((sum, it) => sum + it.price, 0);
+      if (total > 0 && amount === 0) setAmount(total);
+
+      // Build review-item data: each AI item is shared by all included members
+      const includedMembers = members.filter((m) => m.included);
+      const reviewItems = items.map((it, i) => ({
+        id: `ai_${i}_${Date.now()}`,
+        name: it.item,
+        price: it.price,
+        sharedWith: includedMembers.map((m) => m.id),
+      }));
+      const reviewMembers = members.map((m) => ({ id: m.id, name: m.name }));
+
+      // Populate shared store so review-item screens can read it
+      reviewStore.init({
+        items: reviewItems,
+        members: reviewMembers,
+        receiptImageUrl: imageUrl,
+        totalBill: amount > 0 ? amount : total,
+      });
+    } catch (err: any) {
+      Alert.alert("Scan Failed", err.message || "Could not analyze receipt");
+      setReceiptUrl(undefined);
+    } finally {
+      setScanning(false);
+    }
+  };
 
   return (
     <View style={styles.screen}>
@@ -52,14 +99,9 @@ export default function AddExpensesScreen() {
 
         <View style={{ height: 12 }} />
         <ScanReceiptButton
-          // Important: Pass receiptUrl so the button changes to "View Item" once the image is displayed.
           receiptUrl={receiptUrl}
-          onChangeReceipt={(newUrl: string) => {
-            setReceiptUrl(newUrl);
-            // Backend later: upload picture/scan OCR
-            console.log('TODO backend: handle receipt image URL', { newUrl });
-          }}
-          // The parameters for the Scan Receipt Button to automatically push when an image is available.
+          onChangeReceipt={handleReceiptPicked}
+          loading={scanning}
           amount={amount}
           desc={desc}
           date={date}
@@ -80,9 +122,9 @@ export default function AddExpensesScreen() {
           categories={DEFAULT_CATEGORIES}
           selectedId={categoryId}
           onSelect={(id) => {
-            setCategoryId(id);    // TODO backend: gắn category cho expense
-            const chosen = DEFAULT_CATEGORIES.find(c => c.id === id);
-            console.log('Selected category (UI)', chosen);
+            setCategoryId(id); // TODO backend: gắn category cho expense
+            const chosen = DEFAULT_CATEGORIES.find((c) => c.id === id);
+            console.log("Selected category (UI)", chosen);
           }}
           onClose={() => setCategoryModal(false)}
         />
@@ -95,7 +137,7 @@ export default function AddExpensesScreen() {
             onChange={(d) => {
               setDate(d);
               // Backend later: sync selected datetime
-              console.log('Selected date/time (UI)', d.toISOString());
+              console.log("Selected date/time (UI)", d.toISOString());
             }}
           />
           {/* PaidByCard open dropdown; need people + selectedId */}
@@ -105,8 +147,8 @@ export default function AddExpensesScreen() {
             onChange={(id) => {
               setPaidById(id);
               // Backend later: store payer.
-              const chosen = people.find(p => p.id === id);
-              console.log('Selected payer (UI)', { id, name: chosen?.name });
+              const chosen = people.find((p) => p.id === id);
+              console.log("Selected payer (UI)", { id, name: chosen?.name });
             }}
           />
         </RowTwoCols>
@@ -117,14 +159,21 @@ export default function AddExpensesScreen() {
           onToggle={(id) => {
             // UI-only: simply flip the state to see the effect.
             setMembers((prev) =>
-              prev.map((m) => (m.id === id ? { ...m, included: !m.included } : m)),
+              prev.map((m) =>
+                m.id === id ? { ...m, included: !m.included } : m,
+              ),
             );
-            console.log('TODO backend: toggle participant include', { id });
+            console.log("TODO backend: toggle participant include", { id });
           }}
           onChangeAmount={(id, v) => {
             // UI-only: change the number in the input field.
-            setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, amount: v } : m)));
-            console.log('TODO backend: change participant amount', { id, amount: v });
+            setMembers((prev) =>
+              prev.map((m) => (m.id === id ? { ...m, amount: v } : m)),
+            );
+            console.log("TODO backend: change participant amount", {
+              id,
+              amount: v,
+            });
           }}
         />
 
@@ -134,7 +183,7 @@ export default function AddExpensesScreen() {
       <AddExpensesButton
         onPress={() => {
           // Backend later: submit payload
-          console.log('TODO backend: submit expense', {
+          console.log("TODO backend: submit expense", {
             amount,
             desc,
             date: date.toISOString(),

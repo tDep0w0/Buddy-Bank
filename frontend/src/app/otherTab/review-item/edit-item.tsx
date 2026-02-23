@@ -1,40 +1,74 @@
-import React, { useMemo, useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-import { Colors } from '@/constants/colors';
-import SectionTitle from '@/components/appTab/reviewItems/SectionTitle';
-import { useLocalSearchParams, router } from 'expo-router';
+import React, { useMemo, useState } from "react";
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { Colors } from "@/constants/colors";
+import SectionTitle from "@/components/appTab/reviewItems/SectionTitle";
+import { useLocalSearchParams, router } from "expo-router";
+import { useReviewStore, reviewStore } from "@/services/reviewStore";
 
 type Row = { id: string; name: string; included: boolean; amount: number };
 
 export default function EditItemScreen() {
-  const { item } = useLocalSearchParams<{ item?: string }>();
+  const { item: itemParam } = useLocalSearchParams<{ item?: string }>();
+  const { members } = useReviewStore();
 
   const parsed = useMemo(() => {
-    try { return item ? JSON.parse(item) as { id: string; name: string; price: number } : undefined; }
-    catch { return undefined; }
-  }, [item]);
+    try {
+      return itemParam
+        ? (JSON.parse(itemParam) as {
+            id: string;
+            name: string;
+            price: number;
+            sharedWith: string[];
+          })
+        : undefined;
+    } catch {
+      return undefined;
+    }
+  }, [itemParam]);
 
-  const [name, setName] = useState(parsed?.name ?? 'Extra Chips');
-  const [price, setPrice] = useState<string>(String(parsed?.price ?? 12.5));
+  const [name, setName] = useState(parsed?.name ?? "");
+  const [price, setPrice] = useState<string>(String(parsed?.price ?? 0));
 
-  // Dummy rows for demo – sau này lấy từ backend
-  const [rows, setRows] = useState<Row[]>([
-    { id: 'you', name: 'You', included: true, amount: 6.25 },
-    { id: 'sarah', name: 'Sarah', included: true, amount: 6.25 },
-    { id: 'mike', name: 'Mike', included: false, amount: 0 },
-  ]);
+  // Build rows from real members, marking those in sharedWith as included
+  const [rows, setRows] = useState<Row[]>(
+    members.map((m) => {
+      const isIncluded = parsed?.sharedWith?.includes(m.id) ?? false;
+      const splitCount = parsed?.sharedWith?.length || 1;
+      return {
+        id: m.id,
+        name: m.name,
+        included: isIncluded,
+        amount: isIncluded ? (parsed?.price ?? 0) / splitCount : 0,
+      };
+    }),
+  );
 
   const toggleRow = (id: string) => {
-    setRows(prev => prev.map(r => r.id === id ? { ...r, included: !r.included } : r));
+    setRows((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, included: !r.included } : r)),
+    );
   };
   const setAmount = (id: string, v: string) => {
     const num = Number(v) || 0;
-    setRows(prev => prev.map(r => r.id === id ? { ...r, amount: num } : r));
+    setRows((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, amount: num } : r)),
+    );
   };
 
   return (
     <View style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.label}>Item Name</Text>
         <TextInput
           value={name}
@@ -51,7 +85,15 @@ export default function EditItemScreen() {
             keyboardType="decimal-pad"
             value={price}
             onChangeText={setPrice}
-            style={[styles.input, { flex: 1, marginTop: 0, backgroundColor: 'transparent', borderWidth: 0 }]}
+            style={[
+              styles.input,
+              {
+                flex: 1,
+                marginTop: 0,
+                backgroundColor: "transparent",
+                borderWidth: 0,
+              },
+            ]}
           />
         </View>
 
@@ -59,10 +101,16 @@ export default function EditItemScreen() {
         <SectionTitle>SPLIT BREAKDOWN</SectionTitle>
 
         <View>
-          {rows.map(r => (
+          {rows.map((r) => (
             <View key={r.id} style={styles.row}>
-              <TouchableOpacity onPress={() => toggleRow(r.id)} style={[styles.radio, r.included && styles.radioOn]} />
-              <Image source={require('../../../../assets/images/default_ava.jpg')} style={styles.avatarSmall} />
+              <TouchableOpacity
+                onPress={() => toggleRow(r.id)}
+                style={[styles.radio, r.included && styles.radioOn]}
+              />
+              <Image
+                source={require("../../../../assets/images/default_ava.jpg")}
+                style={styles.avatarSmall}
+              />
               <Text style={styles.rowName}>{r.name}</Text>
 
               <View style={styles.amountField}>
@@ -84,13 +132,16 @@ export default function EditItemScreen() {
       <View style={styles.footer}>
         <TouchableOpacity
           onPress={() => {
-            // TODO backend: lưu thay đổi item
-            console.log('Save Item Changes (UI)', {
-              id: parsed?.id,
-              name,
-              price: Number(price) || 0,
-              split: rows.filter(r => r.included).map(r => ({ id: r.id, amount: r.amount })),
-            });
+            if (parsed) {
+              const includedIds = rows
+                .filter((r) => r.included)
+                .map((r) => r.id);
+              reviewStore.updateItem(parsed.id, {
+                name,
+                price: Number(price) || 0,
+                sharedWith: includedIds,
+              });
+            }
             router.back();
           }}
           style={styles.primaryBtn}
@@ -109,35 +160,65 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 16, paddingBottom: 24 },
   label: { color: Colors.textGray, marginTop: 8, marginBottom: 6 },
   input: {
-    backgroundColor: Colors.surface, borderRadius: 12, padding: 12, color: '#fff',
-    borderWidth: 1, borderColor: Colors.border,
+    backgroundColor: Colors.surface,
+    borderRadius: 12,
+    padding: 12,
+    color: "#fff",
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   inputRow: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: Colors.surface, borderRadius: 12, paddingHorizontal: 12,
-    borderWidth: 1, borderColor: Colors.border,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.surface,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   prefix: { color: Colors.textGray, fontSize: 16, marginRight: 6 },
   row: {
-    backgroundColor: Colors.surface, borderRadius: 12, padding: 12,
-    flexDirection: 'row', alignItems: 'center',
-    borderWidth: 1, borderColor: Colors.border,
+    backgroundColor: Colors.surface,
+    borderRadius: 12,
+    padding: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: Colors.border,
     marginBottom: 10,
   },
   radio: {
-    width: 18, height: 18, borderRadius: 9, borderWidth: 2, borderColor: '#82e1ae', marginRight: 10,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 2,
+    borderColor: "#82e1ae",
+    marginRight: 10,
   },
-  radioOn: { backgroundColor: '#11c26a' },
+  radioOn: { backgroundColor: "#11c26a" },
   avatarSmall: { width: 24, height: 24, borderRadius: 12, marginRight: 10 },
-  rowName: { color: '#fff', fontWeight: '600', flex: 1 },
+  rowName: { color: "#fff", fontWeight: "600", flex: 1 },
   amountField: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: '#0d1a14',
-    borderRadius: 10, borderWidth: 1, borderColor: Colors.border, paddingHorizontal: 10, height: 36,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#0d1a14",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    paddingHorizontal: 10,
+    height: 36,
   },
   currency: { color: Colors.textGray, marginRight: 4 },
-  amountInput: { color: '#fff', minWidth: 60, textAlign: 'right' },
+  amountInput: { color: "#fff", minWidth: 60, textAlign: "right" },
   footer: { padding: 12, backgroundColor: Colors.background },
-  primaryBtn: { backgroundColor: Colors.primary, height: 52, borderRadius: 14, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' },
-  check: { color: '#083b1f', fontWeight: '900', marginRight: 8, fontSize: 18 },
-  primaryText: { color: '#083b1f', fontWeight: '800', fontSize: 16 },
+  primaryBtn: {
+    backgroundColor: Colors.primary,
+    height: 52,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  check: { color: "#083b1f", fontWeight: "900", marginRight: 8, fontSize: 18 },
+  primaryText: { color: "#083b1f", fontWeight: "800", fontSize: 16 },
 });

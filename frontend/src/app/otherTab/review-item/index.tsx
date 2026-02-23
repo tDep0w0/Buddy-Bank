@@ -1,42 +1,36 @@
-import React, { useMemo } from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
-import { Colors } from '@/constants/colors';
+import React, { useMemo } from "react";
+import { View, StyleSheet, ScrollView, Text } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { Colors } from "@/constants/colors";
 
-import TotalBillCard from '@/components/appTab/reviewItems/TotalBillCard';
-import ViewReceiptButton from '@/components/appTab/reviewItems/ViewReceiptButton';
-import SectionTitle from '@/components/appTab/reviewItems/SectionTitle';
-import SplitChips, { SplitChip } from '@/components/appTab/reviewItems/SplitChips';
-import ItemsList from '@/components/appTab/reviewItems/ItemsList';
-import FooterPrimaryButton from '@/components/appTab/reviewItems/FooterPrimaryButton';
+import TotalBillCard from "@/components/appTab/reviewItems/TotalBillCard";
+import ViewReceiptButton from "@/components/appTab/reviewItems/ViewReceiptButton";
+import SectionTitle from "@/components/appTab/reviewItems/SectionTitle";
+import SplitChips, {
+  SplitChip,
+} from "@/components/appTab/reviewItems/SplitChips";
+import ItemsList from "@/components/appTab/reviewItems/ItemsList";
+import FooterPrimaryButton from "@/components/appTab/reviewItems/FooterPrimaryButton";
+import { useReviewStore } from "@/services/reviewStore";
 
 export type Member = { id: string; name: string };
-export type Item = { id: string; name: string; price: number; sharedWith: string[] };
-
-// Dummy members (UI only)
-const members: Member[] = [
-  { id: 'you', name: 'You' },
-  { id: 'sarah', name: 'Sarah' },
-  { id: 'mike', name: 'Mike' },
-  { id: 'alex', name: 'Alex' },
-];
-
-// Dummy items (UI only)
-const initialItems: Item[] = [
-  { id: 'i1', name: 'Milk 1 Gallon', price: 3.99, sharedWith: ['you'] },
-  { id: 'i2', name: 'Eggs 1 Dozen', price: 5.50, sharedWith: ['you', 'sarah', 'mike', 'alex'] },
-  { id: 'i3', name: 'Avocados (3)', price: 4.50, sharedWith: ['mike'] },
-  { id: 'i4', name: 'Shared Drinks', price: 29.49, sharedWith: ['you', 'sarah', 'mike'] },
-];
+export type Item = {
+  id: string;
+  name: string;
+  price: number;
+  sharedWith: string[];
+};
 
 export default function ReviewItemsScreen() {
   const { amount } = useLocalSearchParams<{ amount?: string }>();
-  const totalBill = Number(amount) > 0 ? Number(amount) : 45.2;
+  const { items, members, receiptImageUrl, totalBill } = useReviewStore();
 
-  const items = initialItems;
+  // Use amount from params if available, then store totalBill, then sum of items
+  const sumItems = items.reduce((s, it) => s + it.price, 0);
+  const effectiveTotalBill =
+    Number(amount) > 0 ? Number(amount) : totalBill > 0 ? totalBill : sumItems;
 
   const chips: SplitChip[] = useMemo(() => {
-    // Calculate each person's share based on how much they share of each item.
     const map: Record<string, number> = {};
     members.forEach((m) => (map[m.id] = 0));
 
@@ -51,25 +45,28 @@ export default function ReviewItemsScreen() {
       id: m.id,
       name: m.name,
       amount: map[m.id] || 0,
-      isMe: m.id === 'you',
+      isMe: m.id === "you",
     }));
-  }, []);
+  }, [items, members]);
 
-  const sumItems = items.reduce((s, it) => s + it.price, 0);
-  const inconsistent = Math.abs(sumItems - totalBill) > 0.01;
+  const inconsistent =
+    effectiveTotalBill > 0 && Math.abs(sumItems - effectiveTotalBill) > 0.01;
 
   return (
     <View style={styles.screen}>
-
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.topCard}>
-          <TotalBillCard total={totalBill} />
-          <ViewReceiptButton imagePath="../../../assets/images/dummy_bill.jpg" />
+          <TotalBillCard total={effectiveTotalBill} />
+          <ViewReceiptButton receiptImageUrl={receiptImageUrl} />
 
           {inconsistent && (
             <View style={styles.warning}>
               <Text style={styles.warnText}>
-                The sum of items (${sumItems.toFixed(2)}) does not match the total. Do not forget to add tax or tip.
+                The sum of items (${sumItems.toFixed(2)}) does not match the
+                total. Do not forget to add tax or tip.
               </Text>
             </View>
           )}
@@ -80,16 +77,13 @@ export default function ReviewItemsScreen() {
 
         <View style={{ height: 18 }} />
         <ItemsList items={items} members={members} />
-
-
       </ScrollView>
 
       <FooterPrimaryButton
         label="Confirm & Split"
         onPress={() => {
-          // TODO backend: Confirm split money
-          console.log('Confirm & Split (UI)', {
-            totalBill,
+          console.log("Confirm & Split", {
+            totalBill: effectiveTotalBill,
             items,
             split: chips.map((c) => ({ id: c.id, amount: c.amount })),
           });
@@ -106,11 +100,11 @@ const styles = StyleSheet.create({
   topCard: { marginBottom: 16 },
   warning: {
     marginTop: 12,
-    backgroundColor: '#2a2f23',
+    backgroundColor: "#2a2f23",
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.border,
     padding: 10,
   },
-  warnText: { color: '#ffd27d' },
+  warnText: { color: "#ffd27d" },
 });

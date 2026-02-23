@@ -12,7 +12,10 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "This app accesses photos to choose a profile picture",
-        "NSCameraUsageDescription": "This app uses the camera to take a profile photo"
+        "NSCameraUsageDescription": "This app uses the camera to take a profile photo",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
       },
       "bundleIdentifier": "frontend"
     },
@@ -47,7 +50,15 @@
       ],
       "expo-sqlite",
       "expo-web-browser",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

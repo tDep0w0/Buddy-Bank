@@ -1,14 +1,21 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { Pressable, Text, View, StyleSheet, LayoutChangeEvent, findNodeHandle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/colors';
-import { Avatar } from '../common/Avatar';
-import { DateTimePickerModal } from './DateTimePickerModal';
-import { PaidByDropdown, Person } from './PaidByDropdown';
+import React, { useMemo, useRef, useState } from "react";
+import {
+  Pressable,
+  Text,
+  View,
+  StyleSheet,
+  LayoutChangeEvent,
+  findNodeHandle,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "@/constants/colors";
+import { Avatar } from "../common/Avatar";
+import { DateTimePickerModal } from "./DateTimePickerModal";
+import { PaidByDropdown, Person } from "./PaidByDropdown";
 
-export const RowTwoCols: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <View style={styles.row}>{children}</View>
-);
+export const RowTwoCols: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => <View style={styles.row}>{children}</View>;
 
 // ---------- DateCard ----------
 export const DateCard: React.FC<{
@@ -19,8 +26,8 @@ export const DateCard: React.FC<{
   const display = useMemo(
     () =>
       date.toLocaleString(undefined, {
-        dateStyle: 'short',
-        timeStyle: 'short',
+        dateStyle: "short",
+        timeStyle: "short",
       }),
     [date],
   );
@@ -55,10 +62,15 @@ export const PaidByCard: React.FC<{
 }> = ({ selectedId, people, onChange }) => {
   const [open, setOpen] = useState(false);
   const cardRef = useRef<View>(null);
-  const [anchor, setAnchor] = useState<{ x?: number; y?: number; width?: number; height?: number }>();
+  const [anchor, setAnchor] = useState<{
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+  }>();
 
   const selectedName = useMemo(
-    () => people.find((p) => p.id === selectedId)?.name ?? 'You',
+    () => people.find((p) => p.id === selectedId)?.name ?? "You",
     [people, selectedId],
   );
 
@@ -69,12 +81,17 @@ export const PaidByCard: React.FC<{
 
   return (
     <>
-      <Pressable ref={cardRef} onLayout={onLayout} onPress={() => setOpen(true)} style={styles.card}>
+      <Pressable
+        ref={cardRef}
+        onLayout={onLayout}
+        onPress={() => setOpen(true)}
+        style={styles.card}
+      >
         <View style={styles.cardHeader}>
           <Text style={styles.cardLabel}>PAID BY</Text>
           <Ionicons name="chevron-down" size={20} color="white" />
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <Avatar name={selectedName} />
           <Text style={styles.cardValue}>{selectedName}</Text>
         </View>
@@ -92,11 +109,11 @@ export const PaidByCard: React.FC<{
   );
 };
 
-const BORDER = (Colors as any).border ?? 'rgba(255,255,255,0.06)';
+const BORDER = (Colors as any).border ?? "rgba(255,255,255,0.06)";
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
   },
   card: {
@@ -108,8 +125,8 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 4,
   },
   cardLabel: {
@@ -118,8 +135,8 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
   },
   cardValue: {
-    color: 'white',
+    color: "white",
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
