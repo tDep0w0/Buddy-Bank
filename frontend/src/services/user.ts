@@ -77,7 +77,6 @@ export async function uploadAvatar(
 
 /**
  * Change the password for the currently logged-in user.
-
  */
 export async function changePassword(newPassword: string): Promise<void> {
   const { error } = await supabase.auth.updateUser({ password: newPassword });
